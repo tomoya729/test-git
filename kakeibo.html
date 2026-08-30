@@ -9,81 +9,18 @@
 
   <style>
     * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      transition: 0.2s;
-    }
-
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; transition: 0.2s; }
     button, input, select { font: inherit; }
     button { cursor: pointer; border: 0; }
-
-    .app {
-      max-width: 900px;
-      margin: auto;
-      padding: 16px 12px 50px;
-    }
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
-    }
-
+    .app { max-width: 900px; margin: auto; padding: 16px 12px 50px; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
     .header h1 { margin: 0; font-size: 24px; }
-
-    .iconbtn {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: var(--card);
-      color: var(--text);
-      box-shadow: 0 2px 10px #0001;
-    }
-
-    .monthbar {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    .monthbar button {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--card);
-      color: var(--text);
-      box-shadow: 0 2px 8px #0001;
-    }
-
-    .monthbar input {
-      padding: 9px 12px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: var(--card);
-      color: var(--text);
-      font-weight: 700;
-    }
-
-    .summary {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-    }
-
-    .card,
-    .panel {
-      background: var(--card);
-      border-radius: 17px;
-      box-shadow: 0 2px 12px #0000000d;
-    }
-
+    .iconbtn { width: 42px; height: 42px; border-radius: 50%; background: var(--card); color: var(--text); box-shadow: 0 2px 10px #0001; }
+    .monthbar { display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .monthbar button { width: 40px; height: 40px; border-radius: 50%; background: var(--card); color: var(--text); box-shadow: 0 2px 8px #0001; }
+    .monthbar input { padding: 9px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--card); color: var(--text); font-weight: 700; }
+    .summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .card, .panel { background: var(--card); border-radius: 17px; box-shadow: 0 2px 12px #0000000d; }
     .card { padding: 14px 10px; }
     .card span { font-size: 12px; color: var(--muted); }
     .card strong { display: block; margin-top: 5px; font-size: 18px; }
@@ -91,260 +28,50 @@
     .expense strong { color: #c0392b; }
     .balance strong { color: #2455a4; }
     .invest strong { color: #7950a8; }
-
-    .panel {
-      margin-top: 14px;
-      padding: 16px;
-    }
-
+    .panel { margin-top: 14px; padding: 16px; }
     .panel h2 { margin: 0 0 12px; font-size: 18px; }
-
-    .form {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 9px;
-    }
-
-    .form input,
-    .form select {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: var(--card);
-      color: var(--text);
-    }
-
+    .form { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+    .form input, .form select { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--card); color: var(--text); }
     .amount { grid-column: span 2; font-size: 22px; }
     .wide { grid-column: span 2; }
-
-    .primary {
-      padding: 13px;
-      border-radius: 11px;
-      background: #222;
-      color: #fff;
-      font-weight: 700;
-    }
-
-    .secondary {
-      padding: 10px 12px;
-      border-radius: 10px;
-      background: var(--button);
-      color: var(--text);
-    }
-
-    .budgetrow {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .budgetbar {
-      height: 12px;
-      background: var(--button);
-      border-radius: 99px;
-      overflow: hidden;
-      margin-top: 9px;
-    }
-
-    .budgetbar i {
-      display: block;
-      height: 100%;
-      background: #4b83d1;
-      width: 0;
-      transition: 0.3s;
-    }
-
+    .primary { padding: 13px; border-radius: 11px; background: #222; color: #fff; font-weight: 700; }
+    .secondary { padding: 10px 12px; border-radius: 10px; background: var(--button); color: var(--text); }
+    .budgetrow { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+    .budgetbar { height: 12px; background: var(--button); border-radius: 99px; overflow: hidden; margin-top: 9px; }
+    .budgetbar i { display: block; height: 100%; background: #4b83d1; width: 0; transition: 0.3s; }
     .budgetbar i.over { background: #d9534f; }
     .muted { color: var(--muted); font-size: 13px; }
-
-    .tools {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .filter {
-      display: grid;
-      grid-template-columns: 1fr 150px;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
-
-    .filter input,
-    .filter select {
-      padding: 10px;
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      background: var(--card);
-      color: var(--text);
-    }
-
-    .item {
-      display: grid;
-      grid-template-columns: 82px 1fr auto auto;
-      gap: 8px;
-      align-items: center;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
+    .tools { display: flex; flex-wrap: wrap; gap: 8px; }
+    .filter { display: grid; grid-template-columns: 1fr 150px; gap: 8px; margin-bottom: 8px; }
+    .filter input, .filter select { padding: 10px; border: 1px solid var(--border); border-radius: 9px; background: var(--card); color: var(--text); }
+    .item { display: grid; grid-template-columns: 82px 1fr auto auto; gap: 8px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
     .item:last-child { border-bottom: 0; }
     .item small { color: var(--muted); }
     .item span { font-weight: 600; }
-
-    .item em {
-      display: block;
-      font-size: 12px;
-      color: var(--muted);
-      font-style: normal;
-      font-weight: 400;
-    }
-
-    .edit,
-    .delete {
-      padding: 7px 9px;
-      border-radius: 8px;
-      background: var(--button);
-      color: var(--text);
-    }
-
+    .item em { display: block; font-size: 12px; color: var(--muted); font-style: normal; font-weight: 400; }
+    .edit, .delete { padding: 7px 9px; border-radius: 8px; background: var(--button); color: var(--text); }
     .delete { color: #c0392b; }
     .empty { text-align: center; color: var(--muted); padding: 22px; }
-
-    .tabs {
-      display: flex;
-      gap: 7px;
-      margin-bottom: 12px;
-    }
-
-    .tab {
-      flex: 1;
-      padding: 10px;
-      border-radius: 9px;
-      background: var(--button);
-      color: var(--text);
-    }
-
+    .tabs { display: flex; gap: 7px; margin-bottom: 12px; }
+    .tab { flex: 1; padding: 10px; border-radius: 9px; background: var(--button); color: var(--text); }
     .tab.active { background: #222; color: #fff; }
     .hidden { display: none !important; }
-
-    .chartwrap {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .chartwrap canvas {
-      max-width: 100%;
-      height: auto;
-    }
-
-    .yeargrid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-    }
-
-    .yearcard {
-      padding: 12px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-    }
-
-    .yearcard strong {
-      display: block;
-      margin-top: 5px;
-    }
-
-    .dialogback {
-      position: fixed;
-      inset: 0;
-      background: #0007;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      padding: 10px;
-      z-index: 10;
-    }
-
-    .dialog {
-      width: min(100%, 560px);
-      max-height: 90vh;
-      overflow: auto;
-      background: var(--card);
-      color: var(--text);
-      border-radius: 20px;
-      padding: 18px;
-    }
-
+    .chartwrap { width: 100%; display: flex; justify-content: center; overflow: hidden; }
+    .chartwrap canvas { max-width: 100%; height: auto; }
+    .yeargrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .yearcard { padding: 12px; border: 1px solid var(--border); border-radius: 12px; }
+    .yearcard strong { display: block; margin-top: 5px; }
+    .dialogback { position: fixed; inset: 0; background: #0007; display: flex; align-items: flex-end; justify-content: center; padding: 10px; z-index: 10; }
+    .dialog { width: min(100%, 560px); max-height: 90vh; overflow: auto; background: var(--card); color: var(--text); border-radius: 20px; padding: 18px; }
     .dialog h2 { margin-top: 0; }
-
-    .settingrow {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
+    .settingrow { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
     .danger { color: #c0392b; }
-
-    .lockscreen {
-      position: fixed;
-      inset: 0;
-      background: var(--bg);
-      z-index: 20;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .lockcard {
-      width: min(100%, 360px);
-      background: var(--card);
-      padding: 25px;
-      border-radius: 20px;
-      text-align: center;
-      box-shadow: 0 4px 25px #0002;
-    }
-
-    .lockcard input {
-      width: 100%;
-      padding: 13px;
-      text-align: center;
-      font-size: 22px;
-      letter-spacing: 8px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-    }
-
-    .error {
-      color: #d9534f;
-      min-height: 20px;
-    }
-
-    :root {
-      --bg: #f5f6f8;
-      --card: #fff;
-      --text: #222;
-      --muted: #777;
-      --border: #e5e5e5;
-      --button: #eee;
-    }
-
-    .dark {
-      --bg: #111315;
-      --card: #1d2024;
-      --text: #f3f3f3;
-      --muted: #aaa;
-      --border: #34383d;
-      --button: #2a2e33;
-    }
-
+    .lockscreen { position: fixed; inset: 0; background: var(--bg); z-index: 20; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .lockcard { width: min(100%, 360px); background: var(--card); padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 4px 25px #0002; }
+    .lockcard input { width: 100%; padding: 13px; text-align: center; font-size: 22px; letter-spacing: 8px; border: 1px solid var(--border); border-radius: 10px; }
+    .error { color: #d9534f; min-height: 20px; }
+    :root { --bg: #f5f6f8; --card: #fff; --text: #222; --muted: #777; --border: #e5e5e5; --button: #eee; }
+    .dark { --bg: #111315; --card: #1d2024; --text: #f3f3f3; --muted: #aaa; --border: #34383d; --button: #2a2e33; }
     @media (max-width: 650px) {
       .summary { grid-template-columns: 1fr 1fr; }
       .item { grid-template-columns: 68px 1fr auto; }
@@ -352,7 +79,6 @@
       .item .edit { grid-column: 3; grid-row: 1; }
       .yeargrid { grid-template-columns: 1fr 1fr; }
     }
-
     @media (max-width: 420px) {
       .app { padding: 12px 9px 40px; }
       .header h1 { font-size: 21px; }
@@ -390,22 +116,10 @@
 
     <!-- サマリー -->
     <section class="summary">
-      <div class="card income">
-        <span>収入</span>
-        <strong id="income">¥0</strong>
-      </div>
-      <div class="card expense">
-        <span>支出</span>
-        <strong id="expense">¥0</strong>
-      </div>
-      <div class="card balance">
-        <span>残り</span>
-        <strong id="balance">¥0</strong>
-      </div>
-      <div class="card invest">
-        <span>投資</span>
-        <strong id="investment">¥0</strong>
-      </div>
+      <div class="card income"><span>収入</span><strong id="income">¥0</strong></div>
+      <div class="card expense"><span>支出</span><strong id="expense">¥0</strong></div>
+      <div class="card balance"><span>残り</span><strong id="balance">¥0</strong></div>
+      <div class="card invest"><span>投資</span><strong id="investment">¥0</strong></div>
     </section>
 
     <!-- 予算 -->
@@ -415,9 +129,7 @@
         <strong id="budgetText">未設定</strong>
         <button class="secondary" onclick="setBudget()">予算設定</button>
       </div>
-      <div class="budgetbar">
-        <i id="budgetBar"></i>
-      </div>
+      <div class="budgetbar"><i id="budgetBar"></i></div>
       <p id="budgetHint" class="muted">予算を設定すると使用率を表示します</p>
     </section>
 
@@ -426,32 +138,15 @@
       <h2>＋ お金を記録</h2>
       <form id="form" class="form">
         <input id="date" type="date" required>
-
         <select id="type">
           <option value="expense">支出</option>
           <option value="income">収入</option>
         </select>
-
-        <input
-          id="amount"
-          class="amount"
-          type="number"
-          min="1"
-          placeholder="金額を入力"
-          required
-        >
-
+        <input id="amount" class="amount" type="number" min="1" placeholder="金額を入力" required>
         <select id="category">
-          <option>食費</option>
-          <option>家賃</option>
-          <option>光熱費</option>
-          <option>交通費</option>
-          <option>趣味</option>
-          <option>日用品</option>
-          <option>投資</option>
-          <option>その他</option>
+          <option>食費</option><option>家賃</option><option>光熱費</option><option>交通費</option>
+          <option>趣味</option><option>日用品</option><option>投資</option><option>その他</option>
         </select>
-
         <input id="note" placeholder="メモ（任意）">
         <button id="submitBtn" class="primary wide">記録する</button>
       </form>
@@ -463,14 +158,10 @@
         <button id="monthTab" class="tab active" onclick="showView('month')">月の分析</button>
         <button id="yearTab" class="tab" onclick="showView('year')">年間分析</button>
       </div>
-
       <div id="monthView">
         <h2>📊 支出の内訳</h2>
-        <div class="chartwrap">
-          <canvas id="chart"></canvas>
-        </div>
+        <div class="chartwrap"><canvas id="chart"></canvas></div>
       </div>
-
       <div id="yearView" class="hidden">
         <h2>📈 年間推移</h2>
         <div id="yearGrid" class="yeargrid"></div>
@@ -480,7 +171,6 @@
     <!-- 明細 -->
     <section class="panel">
       <h2>🧾 明細</h2>
-
       <div class="filter">
         <input id="search" placeholder="カテゴリ・メモを検索">
         <select id="filterType">
@@ -489,41 +179,20 @@
           <option value="income">収入</option>
         </select>
       </div>
-
       <div id="list"></div>
-
       <div class="tools">
         <button class="secondary" onclick="exportCSV()">CSV出力</button>
-
         <label class="secondary">
           📥 CSV取込
-          <input
-            id="importCSVFile"
-            type="file"
-            accept=".csv,text/csv"
-            hidden
-            onchange="importCSV(event)"
-          >
+          <input id="importCSVFile" type="file" accept=".csv,text/csv" hidden onchange="importCSV(event)">
         </label>
-
         <button class="secondary" onclick="backupJSON()">バックアップ</button>
-
         <label class="secondary">
           復元
-          <input
-            id="restoreFile"
-            type="file"
-            accept="application/json"
-            hidden
-            onchange="restoreJSON(event)"
-          >
+          <input id="restoreFile" type="file" accept="application/json" hidden onchange="restoreJSON(event)">
         </label>
       </div>
-
-      <p class="muted">
-        CSV取込は「日付,金額,カテゴリ,種別,メモ」形式に対応。<br>
-        CSV出力したファイルをそのまま取り込むこともできます。
-      </p>
+      <p class="muted">CSV取込は「日付,金額,カテゴリ,種別,メモ」形式に対応。<br>CSV出力したファイルをそのまま取り込むこともできます。</p>
     </section>
   </main>
 
@@ -531,35 +200,12 @@
   <div id="dialogBack" class="dialogback hidden" onclick="closeSettings(event)">
     <div class="dialog" onclick="event.stopPropagation()">
       <h2>⚙️ 設定</h2>
-
-      <div class="settingrow">
-        <span>🌙 ダークモード</span>
-        <button class="secondary" onclick="toggleTheme()">切り替え</button>
-      </div>
-
-      <div class="settingrow">
-        <span>🔒 PINロック</span>
-        <button class="secondary" onclick="changePin()">設定・変更</button>
-      </div>
-
-      <div class="settingrow">
-        <span>🔔 通知</span>
-        <button class="secondary" onclick="requestNotify()">許可する</button>
-      </div>
-
-      <div class="settingrow">
-        <span>📦 データ</span>
-        <button class="secondary" onclick="backupJSON()">JSON保存</button>
-      </div>
-
-      <div class="settingrow">
-        <span>🗑️ 全データ削除</span>
-        <button class="secondary danger" onclick="clearAll()">削除</button>
-      </div>
-
-      <button class="primary wide" style="margin-top:14px" onclick="closeSettings()">
-        閉じる
-      </button>
+      <div class="settingrow"><span>🌙 ダークモード</span><button class="secondary" onclick="toggleTheme()">切り替え</button></div>
+      <div class="settingrow"><span>🔒 PINロック</span><button class="secondary" onclick="changePin()">設定・変更</button></div>
+      <div class="settingrow"><span>🔔 通知</span><button class="secondary" onclick="requestNotify()">許可する</button></div>
+      <div class="settingrow"><span>📦 データ</span><button class="secondary" onclick="backupJSON()">JSON保存</button></div>
+      <div class="settingrow"><span>🗑️ 全データ削除</span><button class="secondary danger" onclick="clearAll()">削除</button></div>
+      <button class="primary wide" style="margin-top:14px" onclick="closeSettings()">閉じる</button>
     </div>
   </div>
 
@@ -576,17 +222,13 @@
 
     const today = new Date();
 
-    // Date → YYYY-MM-DD
     function dateString(date) {
       const localDate = new Date(date);
-      return new Date(
-        localDate.getTime() - localDate.getTimezoneOffset() * 60000
-      )
+      return new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000)
         .toISOString()
         .slice(0, 10);
     }
 
-    // 数値 → ¥1,000形式
     function yen(number) {
       return "¥" + Number(number || 0).toLocaleString("ja-JP");
     }
@@ -594,18 +236,14 @@
     $("date").value = dateString(today);
     $("month").value = dateString(today).slice(0, 7);
 
-    if (settings.theme === "dark") {
-      document.body.classList.add("dark");
-    }
+    if (settings.theme === "dark") document.body.classList.add("dark");
 
     // ============================================================
     // データ保存・表示
     // ============================================================
 
     function selected() {
-      return records.filter((record) =>
-        record.date.startsWith($("month").value)
-      );
+      return records.filter((record) => record.date.startsWith($("month").value));
     }
 
     function save() {
@@ -615,21 +253,9 @@
 
     function render() {
       const recordsOfMonth = selected();
-
-      const income = recordsOfMonth
-        .filter((record) => record.type === "income")
-        .reduce((sum, record) => sum + record.amount, 0);
-
-      const expense = recordsOfMonth
-        .filter((record) => record.type === "expense")
-        .reduce((sum, record) => sum + record.amount, 0);
-
-      const investment = recordsOfMonth
-        .filter(
-          (record) =>
-            record.category === "投資" && record.type === "expense"
-        )
-        .reduce((sum, record) => sum + record.amount, 0);
+      const income = recordsOfMonth.filter((record) => record.type === "income").reduce((sum, record) => sum + record.amount, 0);
+      const expense = recordsOfMonth.filter((record) => record.type === "expense").reduce((sum, record) => sum + record.amount, 0);
+      const investment = recordsOfMonth.filter((record) => record.category === "投資" && record.type === "expense").reduce((sum, record) => sum + record.amount, 0);
 
       $("income").textContent = yen(income);
       $("expense").textContent = yen(expense);
@@ -651,34 +277,23 @@
       const filterType = $("filterType").value;
 
       const data = recordsOfMonth.filter((record) => {
-        const matchesType =
-          filterType === "all" || record.type === filterType;
-
+        const matchesType = filterType === "all" || record.type === filterType;
         const text = `${record.category} ${record.note || ""}`.toLowerCase();
-        const matchesKeyword = text.includes(keyword);
-
-        return matchesType && matchesKeyword;
+        return matchesType && text.includes(keyword);
       });
 
       $("list").innerHTML = data.length
-        ? data
-            .slice()
-            .sort((a, b) => b.date.localeCompare(a.date))
-            .map(
-              (record) => `
-                <div class="item">
-                  <small>${record.date}</small>
-                  <span>
-                    ${record.category}　
-                    ${record.type === "income" ? "＋" : "−"}${yen(record.amount)}
-                    ${record.note ? `<em>${escapeHtml(record.note)}</em>` : ""}
-                  </span>
-                  <button class="edit" onclick="editRecord(${record.id})">編集</button>
-                  <button class="delete" onclick="removeRecord(${record.id})">削除</button>
-                </div>
-              `
-            )
-            .join("")
+        ? data.slice().sort((a, b) => b.date.localeCompare(a.date)).map((record) => `
+            <div class="item">
+              <small>${record.date}</small>
+              <span>
+                ${record.category}　${record.type === "income" ? "＋" : "−"}${yen(record.amount)}
+                ${record.note ? `<em>${escapeHtml(record.note)}</em>` : ""}
+              </span>
+              <button class="edit" onclick="editRecord(${record.id})">編集</button>
+              <button class="delete" onclick="removeRecord(${record.id})">削除</button>
+            </div>
+          `).join("")
         : '<div class="empty">該当する記録はありません</div>';
     }
 
@@ -712,7 +327,6 @@
       ctx.clearRect(0, 0, width, height);
 
       const sums = {};
-
       expenseRecords.forEach((record) => {
         sums[record.category] = (sums[record.category] || 0) + record.amount;
       });
@@ -731,7 +345,6 @@
       const centerX = width / 2;
       const centerY = 135;
       const radius = Math.min(105, width * 0.25);
-
       let angle = -Math.PI / 2;
 
       entries.forEach(([, value], index) => {
@@ -739,15 +352,8 @@
 
         ctx.beginPath();
         ctx.moveTo(centerX, centerY);
-        ctx.arc(
-          centerX,
-          centerY,
-          radius,
-          angle,
-          angle + sliceAngle
-        );
+        ctx.arc(centerX, centerY, radius, angle, angle + sliceAngle);
         ctx.closePath();
-
         ctx.fillStyle = `hsl(${index * 55}, 65%, 55%)`;
         ctx.fill();
 
@@ -761,13 +367,8 @@
 
       ctx.textAlign = "left";
       ctx.font = "14px sans-serif";
-
       entries.forEach(([category, value], index) => {
-        ctx.fillText(
-          `${category}: ${yen(value)}`,
-          18,
-          280 + index * 22
-        );
+        ctx.fillText(`${category}: ${yen(value)}`, 18, 280 + index * 22);
       });
     }
 
@@ -780,17 +381,9 @@
 
       $("yearGrid").innerHTML = Array.from({ length: 12 }, (_, index) => {
         const month = String(index + 1).padStart(2, "0");
-        const monthRecords = records.filter((record) =>
-          record.date.startsWith(`${year}-${month}`)
-        );
-
-        const income = monthRecords
-          .filter((record) => record.type === "income")
-          .reduce((sum, record) => sum + record.amount, 0);
-
-        const expense = monthRecords
-          .filter((record) => record.type === "expense")
-          .reduce((sum, record) => sum + record.amount, 0);
+        const monthRecords = records.filter((record) => record.date.startsWith(`${year}-${month}`));
+        const income = monthRecords.filter((record) => record.type === "income").reduce((sum, record) => sum + record.amount, 0);
+        const expense = monthRecords.filter((record) => record.type === "expense").reduce((sum, record) => sum + record.amount, 0);
 
         return `
           <div class="yearcard">
@@ -809,35 +402,24 @@
     function renderBudget(expense) {
       const key = `budget_${$("month").value}`;
       const budget = Number(localStorage.getItem(key) || 0);
-
       $("budgetText").textContent = budget ? yen(budget) : "未設定";
 
       const bar = $("budgetBar");
-
       if (!budget) {
         bar.style.width = "0%";
-        $("budgetHint").textContent =
-          "予算を設定すると使用率を表示します";
+        $("budgetHint").textContent = "予算を設定すると使用率を表示します";
         return;
       }
 
       const percentage = Math.min((expense / budget) * 100, 100);
       bar.style.width = percentage + "%";
       bar.classList.toggle("over", expense > budget);
-
-      $("budgetHint").textContent =
-        `使用 ${yen(expense)} / 残り ${yen(budget - expense)}（${Math.round(
-          (expense / budget) * 100
-        )}%）`;
+      $("budgetHint").textContent = `使用 ${yen(expense)} / 残り ${yen(budget - expense)}（${Math.round((expense / budget) * 100)}%）`;
     }
 
     function setBudget() {
       const key = `budget_${$("month").value}`;
-      const value = prompt(
-        "今月の支出予算を入力（円）",
-        localStorage.getItem(key) || ""
-      );
-
+      const value = prompt("今月の支出予算を入力（円）", localStorage.getItem(key) || "");
       if (value === null) return;
 
       if (value === "" || Number(value) < 0) {
@@ -868,15 +450,11 @@
 
       if (editingId) {
         const record = records.find((item) => item.id === editingId);
-        Object.assign(record, data);
-
+        if (record) Object.assign(record, data);
         editingId = null;
         $("submitBtn").textContent = "記録する";
       } else {
-        records.push({
-          id: Date.now(),
-          ...data
-        });
+        records.push({ id: Date.now(), ...data });
       }
 
       event.target.reset();
@@ -893,16 +471,13 @@
       $("category").value = record.category;
       $("type").value = record.type;
       $("note").value = record.note || "";
-
       editingId = id;
       $("submitBtn").textContent = "更新する";
-
       scrollTo({ top: 0, behavior: "smooth" });
     }
 
     function removeRecord(id) {
       if (!confirm("この記録を削除しますか？")) return;
-
       records = records.filter((record) => record.id !== id);
       save();
     }
@@ -919,8 +494,11 @@
     }
 
     $("month").addEventListener("change", render);
-    $("search").addEventListener("input", renderList.bind(null, selected()));
-    $("filterType").addEventListener("change", renderList.bind(null, selected()));
+
+    // 現在選択されている月を毎回取得する
+    $("search").addEventListener("input", () => renderList(selected()));
+    $("filterType").addEventListener("change", () => renderList(selected()));
+
     window.addEventListener("resize", render);
 
     function showView(view) {
@@ -928,7 +506,6 @@
       $("yearView").classList.toggle("hidden", view !== "year");
       $("monthTab").classList.toggle("active", view === "month");
       $("yearTab").classList.toggle("active", view === "year");
-
       if (view === "year") drawYear();
     }
 
@@ -948,11 +525,7 @@
 
     function toggleTheme() {
       document.body.classList.toggle("dark");
-
-      settings.theme = document.body.classList.contains("dark")
-        ? "dark"
-        : "light";
-
+      settings.theme = document.body.classList.contains("dark") ? "dark" : "light";
       localStorage.setItem("kakeiboSettings", JSON.stringify(settings));
       render();
     }
@@ -962,21 +535,9 @@
     // ============================================================
 
     function backupJSON() {
-      const blob = new Blob(
-        [
-          JSON.stringify(
-            {
-              version: 2,
-              exportedAt: new Date().toISOString(),
-              records,
-              settings
-            },
-            null,
-            2
-          )
-        ],
-        { type: "application/json" }
-      );
+      const blob = new Blob([
+        JSON.stringify({ version: 2, exportedAt: new Date().toISOString(), records, settings }, null, 2)
+      ], { type: "application/json" });
 
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -991,18 +552,12 @@
       if (!file) return;
 
       const reader = new FileReader();
-
       reader.onload = () => {
         try {
           const data = JSON.parse(reader.result);
-
           if (!Array.isArray(data.records)) throw new Error();
 
-          if (
-            confirm(
-              `${data.records.length}件のデータを復元します。現在のデータは置き換わります。`
-            )
-          ) {
+          if (confirm(`${data.records.length}件のデータを復元します。現在のデータは置き換わります。`)) {
             records = data.records;
             localStorage.setItem("kakeibo", JSON.stringify(records));
             render();
@@ -1033,22 +588,16 @@
         ])
       ];
 
-      const csv = rows
-        .map((row) =>
-          row
-            .map((value) => `"${String(value).replace(/"/g, '""')}"`)
-            .join(",")
-        )
-        .join("\n");
+      const csv = rows.map((row) =>
+        row.map((value) => `"${String(value).replace(/"/g, '""')}"`).join(",")
+      ).join("\n");
 
       const blob = new Blob(["\ufeff" + csv], { type: "text/csv" });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
-
       link.href = url;
       link.download = `kakeibo-${$("month").value}.csv`;
       link.click();
-
       URL.revokeObjectURL(url);
     }
 
@@ -1061,19 +610,15 @@
       if (!file) return;
 
       const reader = new FileReader();
-
       reader.onload = () => {
         try {
           const text = reader.result.replace(/^\ufeff/, "");
           const lines = text.split(/\r?\n/).filter((line) => line.trim());
 
-          if (lines.length < 2) {
-            throw new Error("データがありません");
-          }
+          if (lines.length < 2) throw new Error("データがありません");
 
           const rows = lines.map(parseCSVLine);
           const header = rows[0].map((value) => value.trim());
-
           const dateIndex = header.indexOf("日付");
           const amountIndex = header.indexOf("金額");
           const categoryIndex = header.indexOf("カテゴリ");
@@ -1084,56 +629,22 @@
             throw new Error("必要な列がありません");
           }
 
-          const imported = rows
-            .slice(1)
-            .map((row) => {
-              const date = (row[dateIndex] || "").trim();
-              const amount = Number(
-                String(row[amountIndex] || "")
-                  .replace(/,/g, "")
-                  .replace(/¥/g, "")
-                  .trim()
-              );
+          const imported = rows.slice(1).map((row) => {
+            const date = (row[dateIndex] || "").trim();
+            const amount = Number(String(row[amountIndex] || "").replace(/,/g, "").replace(/¥/g, "").trim());
+            const category = categoryIndex >= 0 && row[categoryIndex] ? row[categoryIndex].trim() : "その他";
+            const typeText = typeIndex >= 0 ? (row[typeIndex] || "").trim() : "支出";
+            const type = typeText === "収入" || typeText === "income" ? "income" : "expense";
+            const note = noteIndex >= 0 ? (row[noteIndex] || "").trim() : "";
 
-              const category =
-                categoryIndex >= 0 && row[categoryIndex]
-                  ? row[categoryIndex].trim()
-                  : "その他";
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !amount) return null;
 
-              const typeText =
-                typeIndex >= 0 ? (row[typeIndex] || "").trim() : "支出";
+            return { id: Date.now() + Math.random(), date, amount, category, type, note };
+          }).filter(Boolean);
 
-              const type = typeText === "収入" || typeText === "income"
-                ? "income"
-                : "expense";
+          if (!imported.length) throw new Error("有効なデータがありません");
 
-              const note =
-                noteIndex >= 0 ? (row[noteIndex] || "").trim() : "";
-
-              if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !amount) {
-                return null;
-              }
-
-              return {
-                id: Date.now() + Math.random(),
-                date,
-                amount,
-                category,
-                type,
-                note
-              };
-            })
-            .filter(Boolean);
-
-          if (!imported.length) {
-            throw new Error("有効なデータがありません");
-          }
-
-          if (
-            confirm(
-              `${imported.length}件の明細を追加します。\n現在のデータは残したまま追加されます。`
-            )
-          ) {
+          if (confirm(`${imported.length}件の明細を追加します。\n現在のデータは残したまま追加されます。`)) {
             records.push(...imported);
             save();
             alert(`${imported.length}件の明細を取り込みました！`);
@@ -1147,7 +658,6 @@
       event.target.value = "";
     }
 
-    // CSVの1行をカンマ区切りとして解析（""にも対応）
     function parseCSVLine(line) {
       const result = [];
       let value = "";
@@ -1187,12 +697,7 @@
       }
 
       const permission = await Notification.requestPermission();
-
-      alert(
-        permission === "granted"
-          ? "通知を許可しました（定時通知にはサーバーが必要です）"
-          : "通知は許可されませんでした"
-      );
+      alert(permission === "granted" ? "通知を許可しました（定時通知にはサーバーが必要です）" : "通知は許可されませんでした");
     }
 
     function changePin() {
@@ -1224,19 +729,23 @@
       }
     }
 
+    function clearAll() {
+      if (!confirm("全データを削除します。本当に実行しますか？")) return;
+      records = [];
+      localStorage.setItem("kakeibo", "[]");
+      render();
+      closeSettings();
+    }
+
     // ============================================================
     // 初期化
     // ============================================================
 
-    if (settings.pin) {
-      $("lockscreen").classList.remove("hidden");
-    }
+    if (settings.pin) $("lockscreen").classList.remove("hidden");
 
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
-        navigator.serviceWorker
-          .register("./sw.js")
-          .catch(console.error);
+        navigator.serviceWorker.register("./sw.js").catch(console.error);
       });
     }
 
