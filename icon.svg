@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="110" fill="#f7f1df"/>
+  <rect x="105" y="85" width="270" height="335" rx="34" fill="#a8d7a0" stroke="#5c8d68" stroke-width="14"/>
+  <path d="M105 120h-34v48h34M105 190h-34v48h34M105 260h-34v48h34M105 330h-34v48h34" fill="none" stroke="#5c8d68" stroke-width="14"/>
+  <text x="240" y="290" text-anchor="middle" font-family="Arial, sans-serif" font-size="190" font-weight="700" fill="#4d805b">¥</text>
+  <path d="M335 125l72 34-106 170-72-34z" fill="#f0e2bd" stroke="#444" stroke-width="9"/>
+  <path d="M238 295l-20 49 49-20" fill="#e8b66b" stroke="#444" stroke-width="9"/>
+  <circle cx="399" cy="336" r="43" fill="#f3c4a4" stroke="#d88d72" stroke-width="9"/>
+  <circle cx="384" cy="326" r="5" fill="#444"/><circle cx="414" cy="326" r="5" fill="#444"/>
+  <ellipse cx="399" cy="352" rx="19" ry="10" fill="#e6a98e"/>
+  <circle cx="451" cy="314" r="28" fill="#f1c85b" stroke="#c99b35" stroke-width="7"/>
+  <text x="451" y="324" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#9a6c20">¥</text>
+</svg>
