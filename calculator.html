@@ -4,59 +4,163 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ともやの電卓</title>
+
+  <!-- ================================
+       画面の見た目（CSS）
+       ================================ -->
   <style>
-    body { font-family: sans-serif; display:flex; justify-content:center; margin-top:50px; }
-    .calculator { width:280px; }
-    #display { width:100%; box-sizing:border-box; font-size:28px; padding:15px; text-align:right; margin-bottom:10px; }
-    .buttons { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
-    button { font-size:22px; padding:18px 5px; cursor:pointer; }
-    .zero { grid-column:span 2; }
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .calculator {
+      width: 100%;
+      max-width: 320px;
+      background: white;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    #display {
+      width: 100%;
+      font-size: 32px;
+      padding: 15px;
+      text-align: right;
+      margin-bottom: 12px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background: #fafafa;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    button {
+      border: none;
+      border-radius: 10px;
+      font-size: 22px;
+      padding: 17px 5px;
+      cursor: pointer;
+      background: #eee;
+    }
+
+    button:hover {
+      filter: brightness(0.95);
+    }
+
+    .operator {
+      background: #ddd;
+    }
+
+    .equals {
+      background: #333;
+      color: white;
+    }
+
+    .zero {
+      grid-column: span 2;
+    }
   </style>
 </head>
+
 <body>
   <div class="calculator">
     <input id="display" value="0" readonly>
+
     <div class="buttons">
+      <!-- 1段目 -->
       <button onclick="clearDisplay()">C</button>
-      <button onclick="append('/')">÷</button>
-      <button onclick="append('*')">×</button>
+      <button class="operator" onclick="append('/')">÷</button>
+      <button class="operator" onclick="append('*')">×</button>
       <button onclick="backspace()">⌫</button>
+
+      <!-- 2段目 -->
       <button onclick="append('7')">7</button>
       <button onclick="append('8')">8</button>
       <button onclick="append('9')">9</button>
-      <button onclick="append('-')">−</button>
+      <button class="operator" onclick="append('-')">−</button>
+
+      <!-- 3段目 -->
       <button onclick="append('4')">4</button>
       <button onclick="append('5')">5</button>
       <button onclick="append('6')">6</button>
-      <button onclick="append('+')">+</button>
+      <button class="operator" onclick="append('+')">+</button>
+
+      <!-- 4段目 -->
       <button onclick="append('1')">1</button>
       <button onclick="append('2')">2</button>
       <button onclick="append('3')">3</button>
-      <button onclick="calculate()">=</button>
+      <button class="equals" onclick="calculate()">=</button>
+
+      <!-- 5段目 -->
       <button class="zero" onclick="append('0')">0</button>
       <button onclick="append('.')">.</button>
-      <button onclick="percent()">%</button>
     </div>
   </div>
+
+  <!-- ================================
+       電卓の動き（JavaScript）
+       ================================ -->
   <script>
+    // 計算結果を表示する入力欄を取得
     const display = document.getElementById('display');
+
+    // 数字や演算子を表示欄に追加する
     function append(value) {
-      if (display.value === '0' && /[0-9.]/.test(value)) display.value = value;
-      else display.value += value;
+      // 最初の「0」を数字で置き換える
+      if (display.value === '0' && /[0-9.]/.test(value)) {
+        display.value = value;
+        return;
+      }
+
+      display.value += value;
     }
-    function clearDisplay() { display.value = '0'; }
-    function backspace() { display.value = display.value.length > 1 ? display.value.slice(0, -1) : '0'; }
-    function percent() {
-      const match = display.value.match(/(\d+(?:\.\d+)?)$/);
-      if (!match) return;
-      const number = Number(match[1]) / 100;
-      display.value = display.value.slice(0, -match[1].length) + number;
+
+    // 表示を「0」に戻す
+    function clearDisplay() {
+      display.value = '0';
     }
+
+    // 最後の1文字を削除する
+    function backspace() {
+      if (display.value.length > 1) {
+        display.value = display.value.slice(0, -1);
+      } else {
+        display.value = '0';
+      }
+    }
+
+    // 「=」を押したときに計算する
     function calculate() {
       try {
-        if (!/^[0-9+\-*/. ]+$/.test(display.value)) throw new Error();
-        display.value = Function('"use strict"; return (' + display.value + ')')();
-      } catch { display.value = 'Error'; }
+        // 数字と四則演算以外が入っていないか確認
+        if (!/^[0-9+\-*/. ]+$/.test(display.value)) {
+          throw new Error();
+        }
+
+        // 入力された計算式を計算する
+        display.value = Function(
+          '"use strict"; return (' + display.value + ')'
+        )();
+      } catch {
+        // 計算できなかった場合
+        display.value = 'Error';
+      }
     }
   </script>
 </body>
