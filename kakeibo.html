@@ -1,27 +1,33 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>ともやの家計簿</title>
 <style>
-body{font-family:system-ui,sans-serif;background:#f5f5f5;margin:0;padding:30px;color:#333}.app{max-width:700px;margin:auto;background:white;padding:25px;border-radius:16px;box-shadow:0 4px 18px #0001}h1{text-align:center}.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}.card{padding:15px;border-radius:12px;background:#f0f0f0;text-align:center}.income{color:#16803c}.expense{color:#c0392b}.balance{color:#2455a4}form{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;margin:20px 0}input,select,button{padding:10px;border:1px solid #ddd;border-radius:8px;font-size:15px}button{cursor:pointer;background:#333;color:white}.item{display:flex;justify-content:space-between;padding:12px 4px;border-bottom:1px solid #eee}.delete{background:#eee;color:#333;padding:5px 9px} @media(max-width:600px){.summary{grid-template-columns:1fr}.app{padding:18px}form{grid-template-columns:1fr 1fr}.add{grid-column:span 2}}
+body{font-family:system-ui,sans-serif;background:#f5f5f5;margin:0;padding:24px;color:#333}.app{max-width:850px;margin:auto;background:#fff;padding:24px;border-radius:18px;box-shadow:0 4px 18px #0001}h1{text-align:center}.toolbar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:16px 0}.toolbar input,.toolbar button,form input,form select,form button{padding:10px;border:1px solid #ddd;border-radius:8px;font-size:15px}button{cursor:pointer;background:#333;color:white}.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:20px 0}.card{padding:14px;border-radius:12px;background:#f0f0f0;text-align:center}.income{color:#16803c}.expense{color:#c0392b}.balance{color:#2455a4}.invest{color:#7950a8}form{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;margin:20px 0}.section{margin-top:28px}.chart-wrap{max-width:420px;margin:auto}.item{display:grid;grid-template-columns:100px 1fr auto auto;gap:10px;align-items:center;padding:11px 4px;border-bottom:1px solid #eee}.item button{padding:6px 9px}.edit{background:#666}.delete{background:#eee;color:#333}.empty{text-align:center;color:#888;padding:20px}@media(max-width:650px){.summary{grid-template-columns:1fr 1fr}.item{grid-template-columns:1fr auto}.item small{display:block}form{grid-template-columns:1fr 1fr}.add{grid-column:span 2}}
 </style>
 </head>
-<body>
-<div class="app">
+<body><div class="app">
 <h1>💰 ともやの家計簿</h1>
-<div class="summary"><div class="card income">収入<br><strong id="income">¥0</strong></div><div class="card expense">支出<br><strong id="expense">¥0</strong></div><div class="card balance">残り<br><strong id="balance">¥0</strong></div></div>
-<form id="form"><input id="amount" type="number" min="1" placeholder="金額" required><select id="category"><option>食費</option><option>家賃</option><option>光熱費</option><option>交通費</option><option>趣味</option><option>その他</option></select><select id="type"><option value="expense">支出</option><option value="income">収入</option></select><button class="add">追加</button></form>
-<h2>明細</h2><div id="list"></div>
+<div class="toolbar"><label>対象月 <input id="month" type="month"></label><button onclick="exportCSV()">CSV出力</button><button onclick="clearAll()">全データ削除</button></div>
+<div class="summary"><div class="card income">収入<br><strong id="income">¥0</strong></div><div class="card expense">支出<br><strong id="expense">¥0</strong></div><div class="card balance">残り<br><strong id="balance">¥0</strong></div><div class="card invest">投資<br><strong id="investment">¥0</strong></div></div>
+<form id="form"><input id="date" type="date" required><input id="amount" type="number" min="1" placeholder="金額" required><select id="category"><option>食費</option><option>家賃</option><option>光熱費</option><option>交通費</option><option>趣味</option><option>日用品</option><option>投資</option><option>その他</option></select><select id="type"><option value="expense">支出</option><option value="income">収入</option></select><button class="add">追加</button></form>
+<div class="section"><h2>📊 カテゴリ別支出</h2><div class="chart-wrap"><canvas id="chart"></canvas></div></div>
+<div class="section"><h2>🧾 明細</h2><div id="list"></div></div>
 </div>
 <script>
-let records=JSON.parse(localStorage.getItem('kakeibo')||'[]');
+let records=JSON.parse(localStorage.getItem('kakeibo')||'[]');let editingId=null;
 const yen=n=>'¥'+n.toLocaleString('ja-JP');
+const today=new Date();const iso=d=>d.toISOString().slice(0,10);document.getElementById('date').value=iso(today);document.getElementById('month').value=iso(today).slice(0,7);
+function selected(){return records.filter(r=>r.date.startsWith(document.getElementById('month').value));}
 function save(){localStorage.setItem('kakeibo',JSON.stringify(records));render()}
-function render(){let inc=records.filter(r=>r.type==='income').reduce((s,r)=>s+r.amount,0),exp=records.filter(r=>r.type==='expense').reduce((s,r)=>s+r.amount,0);document.getElementById('income').textContent=yen(inc);document.getElementById('expense').textContent=yen(exp);document.getElementById('balance').textContent=yen(inc-exp);document.getElementById('list').innerHTML=records.length?records.slice().reverse().map((r,i)=>`<div class="item"><span>${r.category}　${r.type==='income'?'＋':'−'}${yen(r.amount)}</span><button class="delete" onclick="remove(${records.length-1-i})">削除</button></div>`).join(''):'まだ記録がありません';}
-function remove(i){records.splice(i,1);save()}
-document.getElementById('form').addEventListener('submit',e=>{e.preventDefault();records.push({amount:Number(amount.value),category:category.value,type:type.value});e.target.reset();save()});render();
-</script>
-</body>
-</html>
+function render(){let rs=selected(),inc=rs.filter(r=>r.type==='income').reduce((s,r)=>s+r.amount,0),exp=rs.filter(r=>r.type==='expense').reduce((s,r)=>s+r.amount,0),inv=rs.filter(r=>r.category==='投資').reduce((s,r)=>s+r.amount,0);income.textContent=yen(inc);expense.textContent=yen(exp);balance.textContent=yen(inc-exp);investment.textContent=yen(inv);list.innerHTML=rs.length?rs.slice().reverse().map(r=>`<div class="item"><small>${r.date}</small><span>${r.category}　${r.type==='income'?'＋':'−'}${yen(r.amount)}</span><button class="edit" onclick="editRecord(${r.id})">編集</button><button class="delete" onclick="removeRecord(${r.id})">削除</button></div>`).join(''):'<div class="empty">この月の記録はありません</div>';drawChart(rs.filter(r=>r.type==='expense'));}
+function drawChart(rs){let c=document.getElementById('chart'),ctx=c.getContext('2d'),w=c.width=c.clientWidth*2,h=c.height=320;ctx.clearRect(0,0,w,h);let sums={};rs.forEach(r=>sums[r.category]=(sums[r.category]||0)+r.amount);let entries=Object.entries(sums);if(!entries.length){ctx.font='28px sans-serif';ctx.fillText('データなし',w/2-70,170);return}let total=entries.reduce((s,[,v])=>s+v,0),cx=w/2,cy=h/2,r=Math.min(w,h)*.32,start=-Math.PI/2;entries.forEach(([k,v],i)=>{let a=v/total*Math.PI*2;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,start,start+a);ctx.closePath();ctx.fillStyle=`hsl(${i*55},65%,55%)`;ctx.fill();start+=a});ctx.fillStyle='#333';ctx.font='bold 22px sans-serif';ctx.textAlign='center';ctx.fillText(yen(total),cx,cy+8);ctx.textAlign='left';let y=24;entries.forEach(([k,v])=>{ctx.fillStyle='#333';ctx.fillText(`${k}: ${yen(v)}`,10,y);y+=25});}
+form.addEventListener('submit',e=>{e.preventDefault();let obj={date:date.value,amount:Number(amount.value),category:category.value,type:type.value};if(editingId){let r=records.find(x=>x.id===editingId);Object.assign(r,obj);editingId=null;document.querySelector('.add').textContent='追加'}else records.push({id:Date.now(),...obj});e.target.reset();date.value=iso(today);save()});
+function removeRecord(id){records=records.filter(r=>r.id!==id);save()}
+function editRecord(id){let r=records.find(x=>x.id===id);date.value=r.date;amount.value=r.amount;category.value=r.category;type.value=r.type;editingId=id;document.querySelector('.add').textContent='更新'}
+month.addEventListener('change',render);
+function exportCSV(){let rs=selected();let csv='日付,金額,カテゴリ,種別\n'+rs.map(r=>`${r.date},${r.amount},${r.category},${r.type==='income'?'収入':'支出'}`).join('\n');let blob=new Blob(['\ufeff'+csv],{type:'text/csv'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`kakeibo-${month.value}.csv`;a.click();URL.revokeObjectURL(a.href)}
+function clearAll(){if(confirm('全データを削除しますか？')){records=[];save()}}
+render();
+</script></body></html>
