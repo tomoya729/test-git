@@ -66,6 +66,16 @@
     function exportCSV(){const rs=selected();const csv='日付,金額,カテゴリ,種別\n'+rs.map(r=>`${r.date},${r.amount},${r.category},${r.type==='income'?'収入':'支出'}`).join('\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`kakeibo-${month.value}.csv`;a.click();URL.revokeObjectURL(a.href)}
     function clearAll(){if(confirm('全データを削除しますか？')){records=[];save()}}
     month.addEventListener('change',render);window.addEventListener('resize',render);render();
+
+    // ==================== オフライン対応 ====================
+    // Service Workerを登録すると、アプリのファイルを端末にキャッシュできる
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(() => console.log('オフライン対応を有効にしました'))
+          .catch((error) => console.error('Service Workerの登録に失敗:', error));
+      });
+    }
   </script>
 </body>
 </html>
