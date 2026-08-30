@@ -3,628 +3,191 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#333333">
+  <link rel="manifest" href="manifest.json">
   <title>ともやの家計簿</title>
 
   <style>
-    /* ===== 全体 ===== */
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: system-ui, sans-serif;
-      background: #f5f5f5;
-      margin: 0;
-      padding: 20px;
-      color: #333;
-    }
-
-    .app {
-      max-width: 850px;
-      margin: auto;
-      background: #fff;
-      padding: 24px;
-      border-radius: 18px;
-      box-shadow: 0 4px 18px #0001;
-    }
-
-    h1 {
-      text-align: center;
-    }
-
-    /* ===== 上部ツール ===== */
-    .toolbar {
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin: 16px 0;
-    }
-
-    .toolbar input,
-    .toolbar button,
-    form input,
-    form select,
-    form button {
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 15px;
-    }
-
-    button {
-      cursor: pointer;
-      background: #333;
-      color: white;
-    }
-
-    /* ===== 集計カード ===== */
-    .summary {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin: 20px 0;
-    }
-
-    .card {
-      padding: 14px;
-      border-radius: 12px;
-      background: #f0f0f0;
-      text-align: center;
-    }
-
-    .income {
-      color: #16803c;
-    }
-
-    .expense {
-      color: #c0392b;
-    }
-
-    .balance {
-      color: #2455a4;
-    }
-
-    .invest {
-      color: #7950a8;
-    }
-
-    /* ===== 入力フォーム ===== */
-    form {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr auto;
-      gap: 8px;
-      margin: 20px 0;
-    }
-
-    /* ===== 各セクション ===== */
-    .section {
-      margin-top: 28px;
-    }
-
-    /* ===== グラフ ===== */
-    .chart-wrap {
-      width: 100%;
-      max-width: 520px;
-      margin: auto;
-      display: flex;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .chart-wrap canvas {
-      display: block;
-      width: 100%;
-      height: auto;
-      max-height: 520px;
-    }
-
-    /* ===== 明細 ===== */
-    .item {
-      display: grid;
-      grid-template-columns: 100px 1fr auto auto;
-      gap: 10px;
-      align-items: center;
-      padding: 11px 4px;
-      border-bottom: 1px solid #eee;
-    }
-
-    .item button {
-      padding: 6px 9px;
-    }
-
-    .edit {
-      background: #666;
-    }
-
-    .delete {
-      background: #eee;
-      color: #333;
-    }
-
-    .empty {
-      text-align: center;
-      color: #888;
-      padding: 20px;
-    }
-
-    /* ===== スマホ対応 ===== */
-    @media (max-width: 650px) {
-      .summary {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .item {
-        grid-template-columns: 1fr auto;
-      }
-
-      .item small {
-        display: block;
-      }
-
-      form {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .add {
-        grid-column: span 2;
-      }
-
-      .chart-wrap {
-        max-width: 100%;
-      }
-    }
+    * { box-sizing: border-box; }
+    body { font-family: system-ui, sans-serif; background:#f5f5f5; margin:0; padding:20px; color:#333; }
+    .app { max-width:850px; margin:auto; background:#fff; padding:24px; border-radius:18px; box-shadow:0 4px 18px #0001; }
+    h1 { text-align:center; }
+    .toolbar { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin:16px 0; }
+    .toolbar input,.toolbar button,form input,form select,form button { padding:10px; border:1px solid #ddd; border-radius:8px; font-size:15px; }
+    button { cursor:pointer; background:#333; color:white; }
+    .summary { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:20px 0; }
+    .card { padding:14px; border-radius:12px; background:#f0f0f0; text-align:center; }
+    .income { color:#16803c; } .expense { color:#c0392b; } .balance { color:#2455a4; } .invest { color:#7950a8; }
+    form { display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:8px; margin:20px 0; }
+    .section { margin-top:28px; }
+    .chart-wrap { width:100%; max-width:520px; margin:auto; display:flex; justify-content:center; overflow:hidden; }
+    .chart-wrap canvas { display:block; width:100%; height:auto; max-height:520px; }
+    .item { display:grid; grid-template-columns:100px 1fr auto auto; gap:10px; align-items:center; padding:11px 4px; border-bottom:1px solid #eee; }
+    .item button { padding:6px 9px; } .edit { background:#666; } .delete { background:#eee; color:#333; }
+    .empty { text-align:center; color:#888; padding:20px; }
+    @media(max-width:650px){ .app{padding:16px;} .summary{grid-template-columns:1fr 1fr;} form{grid-template-columns:1fr 1fr;} .add{grid-column:span 2;} .item{grid-template-columns:1fr auto;} .chart-wrap{max-width:100%;} }
   </style>
 </head>
-
 <body>
   <div class="app">
     <h1>💰 ともやの家計簿</h1>
 
-    <!-- 対象月・CSV出力・全削除 -->
     <div class="toolbar">
-      <label>
-        対象月
-        <input id="month" type="month">
-      </label>
-
+      <label>対象月 <input id="month" type="month"></label>
       <button onclick="exportCSV()">CSV出力</button>
       <button onclick="clearAll()">全データ削除</button>
     </div>
 
-    <!-- 収支の集計 -->
     <div class="summary">
-      <div class="card income">
-        収入<br>
-        <strong id="income">¥0</strong>
-      </div>
-
-      <div class="card expense">
-        支出<br>
-        <strong id="expense">¥0</strong>
-      </div>
-
-      <div class="card balance">
-        残り<br>
-        <strong id="balance">¥0</strong>
-      </div>
-
-      <div class="card invest">
-        投資<br>
-        <strong id="investment">¥0</strong>
-      </div>
+      <div class="card income">収入<br><strong id="income">¥0</strong></div>
+      <div class="card expense">支出<br><strong id="expense">¥0</strong></div>
+      <div class="card balance">残り<br><strong id="balance">¥0</strong></div>
+      <div class="card invest">投資<br><strong id="investment">¥0</strong></div>
     </div>
 
-    <!-- 家計簿データの入力 -->
     <form id="form">
       <input id="date" type="date" required>
       <input id="amount" type="number" min="1" placeholder="金額" required>
-
-      <select id="category">
-        <option>食費</option>
-        <option>家賃</option>
-        <option>光熱費</option>
-        <option>交通費</option>
-        <option>趣味</option>
-        <option>日用品</option>
-        <option>投資</option>
-        <option>その他</option>
-      </select>
-
-      <select id="type">
-        <option value="expense">支出</option>
-        <option value="income">収入</option>
-      </select>
-
+      <select id="category"><option>食費</option><option>家賃</option><option>光熱費</option><option>交通費</option><option>趣味</option><option>日用品</option><option>投資</option><option>その他</option></select>
+      <select id="type"><option value="expense">支出</option><option value="income">収入</option></select>
       <button class="add">追加</button>
     </form>
 
-    <!-- カテゴリ別グラフ -->
-    <div class="section">
-      <h2>📊 カテゴリ別支出</h2>
-      <div class="chart-wrap">
-        <canvas id="chart"></canvas>
-      </div>
-    </div>
-
-    <!-- 明細一覧 -->
-    <div class="section">
-      <h2>🧾 明細</h2>
-      <div id="list"></div>
-    </div>
+    <div class="section"><h2>📊 カテゴリ別支出</h2><div class="chart-wrap"><canvas id="chart"></canvas></div></div>
+    <div class="section"><h2>🧾 明細</h2><div id="list"></div></div>
   </div>
 
   <script>
-    // ========================================
-    // 1. データの準備
-    // ========================================
-
-    // ブラウザに保存している家計簿データを読み込む
-    let records = JSON.parse(
-      localStorage.getItem('kakeibo') || '[]'
-    );
-
-    // 現在編集中のデータID
+    // 家計簿データをブラウザから読み込む
+    let records = JSON.parse(localStorage.getItem('kakeibo') || '[]');
     let editingId = null;
-
-    // 金額を「¥1,000」のように表示する関数
-    const yen = (number) => {
-      return '¥' + number.toLocaleString('ja-JP');
-    };
-
-    // 今日の日付を取得
+    const yen = number => '¥' + number.toLocaleString('ja-JP');
     const today = new Date();
+    const iso = date => date.toISOString().slice(0,10);
 
-    // Dateを「YYYY-MM-DD」に変換する関数
-    const iso = (date) => {
-      return date.toISOString().slice(0, 10);
-    };
+    date.value = iso(today);
+    month.value = iso(today).slice(0,7);
 
-    // 入力欄に今日の日付・今月を設定
-    document.getElementById('date').value = iso(today);
-    document.getElementById('month').value = iso(today).slice(0, 7);
-
-
-    // ========================================
-    // 2. 選択中の月のデータを取得
-    // ========================================
-
+    // 選択中の月だけ取得
     function selected() {
-      const selectedMonth = document.getElementById('month').value;
-
-      return records.filter((record) => {
-        return record.date.startsWith(selectedMonth);
-      });
+      return records.filter(record => record.date.startsWith(month.value));
     }
 
-
-    // ========================================
-    // 3. データを保存する
-    // ========================================
-
+    // 保存して画面更新
     function save() {
-      // JavaScriptの配列をJSON文字列に変換して保存
-      localStorage.setItem(
-        'kakeibo',
-        JSON.stringify(records)
-      );
-
-      // 保存後、画面を更新
+      localStorage.setItem('kakeibo', JSON.stringify(records));
       render();
     }
 
-
-    // ========================================
-    // 4. 画面を更新する
-    // ========================================
-
+    // 画面を更新
     function render() {
-      const recordsOfMonth = selected();
+      const rows = selected();
+      const incomeTotal = rows.filter(r => r.type === 'income').reduce((sum,r) => sum + r.amount, 0);
+      const expenseTotal = rows.filter(r => r.type === 'expense').reduce((sum,r) => sum + r.amount, 0);
+      const investmentTotal = rows.filter(r => r.category === '投資').reduce((sum,r) => sum + r.amount, 0);
 
-      // 収入の合計
-      const incomeTotal = recordsOfMonth
-        .filter((record) => record.type === 'income')
-        .reduce((sum, record) => sum + record.amount, 0);
+      income.textContent = yen(incomeTotal);
+      expense.textContent = yen(expenseTotal);
+      balance.textContent = yen(incomeTotal - expenseTotal);
+      investment.textContent = yen(investmentTotal);
 
-      // 支出の合計
-      const expenseTotal = recordsOfMonth
-        .filter((record) => record.type === 'expense')
-        .reduce((sum, record) => sum + record.amount, 0);
+      list.innerHTML = rows.length ? rows.slice().reverse().map(record => `
+        <div class="item">
+          <small>${record.date}</small>
+          <span>${record.category}　${record.type === 'income' ? '＋' : '−'}${yen(record.amount)}</span>
+          <button class="edit" onclick="editRecord(${record.id})">編集</button>
+          <button class="delete" onclick="removeRecord(${record.id})">削除</button>
+        </div>`).join('') : '<div class="empty">この月の記録はありません</div>';
 
-      // 投資額の合計
-      const investmentTotal = recordsOfMonth
-        .filter((record) => record.category === '投資')
-        .reduce((sum, record) => sum + record.amount, 0);
-
-      // 集計結果を画面に表示
-      document.getElementById('income').textContent = yen(incomeTotal);
-      document.getElementById('expense').textContent = yen(expenseTotal);
-      document.getElementById('balance').textContent = yen(
-        incomeTotal - expenseTotal
-      );
-      document.getElementById('investment').textContent = yen(investmentTotal);
-
-      // 明細を表示
-      const list = document.getElementById('list');
-
-      if (recordsOfMonth.length === 0) {
-        list.innerHTML = '<div class="empty">この月の記録はありません</div>';
-      } else {
-        list.innerHTML = recordsOfMonth
-          .slice()
-          .reverse()
-          .map((record) => {
-            const sign = record.type === 'income' ? '＋' : '−';
-
-            return `
-              <div class="item">
-                <small>${record.date}</small>
-                <span>${record.category}　${sign}${yen(record.amount)}</span>
-                <button class="edit" onclick="editRecord(${record.id})">編集</button>
-                <button class="delete" onclick="removeRecord(${record.id})">削除</button>
-              </div>
-            `;
-          })
-          .join('');
-      }
-
-      // グラフを更新
-      drawChart(
-        recordsOfMonth.filter((record) => record.type === 'expense')
-      );
+      drawChart(rows.filter(record => record.type === 'expense'));
     }
 
-
-    // ========================================
-    // 5. 円グラフを描く
-    // ========================================
-
-    function drawChart(recordsForChart) {
+    // 円グラフを描画
+    function drawChart(rows) {
       const canvas = document.getElementById('chart');
-      const context = canvas.getContext('2d');
-
-      // グラフのサイズを画面に合わせる
-      const width = Math.min(
-        canvas.parentElement.clientWidth,
-        520
-      );
-
+      const ctx = canvas.getContext('2d');
+      const width = Math.min(canvas.parentElement.clientWidth, 520);
       const height = 360;
-      const devicePixelRatio = window.devicePixelRatio || 1;
+      const dpr = window.devicePixelRatio || 1;
 
-      canvas.width = width * devicePixelRatio;
-      canvas.height = height * devicePixelRatio;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
       canvas.style.width = width + 'px';
       canvas.style.height = height + 'px';
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+      ctx.clearRect(0,0,width,height);
 
-      context.setTransform(
-        devicePixelRatio,
-        0,
-        0,
-        devicePixelRatio,
-        0,
-        0
-      );
+      const totals = {};
+      rows.forEach(r => totals[r.category] = (totals[r.category] || 0) + r.amount);
+      const entries = Object.entries(totals);
 
-      context.clearRect(0, 0, width, height);
-
-      // カテゴリごとの支出額を集計
-      const categoryTotals = {};
-
-      recordsForChart.forEach((record) => {
-        categoryTotals[record.category] =
-          (categoryTotals[record.category] || 0) + record.amount;
-      });
-
-      const entries = Object.entries(categoryTotals);
-
-      // データがなければ「データなし」と表示
-      if (entries.length === 0) {
-        context.fillStyle = '#888';
-        context.font = '18px sans-serif';
-        context.textAlign = 'center';
-        context.fillText('データなし', width / 2, height / 2);
+      if (!entries.length) {
+        ctx.fillStyle = '#888'; ctx.font = '18px sans-serif'; ctx.textAlign = 'center';
+        ctx.fillText('データなし', width/2, height/2);
         return;
       }
 
-      // 全支出額
-      const total = entries.reduce(
-        (sum, [, amount]) => sum + amount,
-        0
-      );
+      const total = entries.reduce((sum,[,amount]) => sum + amount, 0);
+      const cx = width/2, cy = 145, radius = Math.min(105,width*0.25);
+      let start = -Math.PI/2;
 
-      // 円グラフの中心・半径
-      const centerX = width / 2;
-      const centerY = 145;
-      const radius = Math.min(105, width * 0.25);
-
-      // グラフを描き始める角度
-      let startAngle = -Math.PI / 2;
-
-      entries.forEach(([category, amount], index) => {
-        // このカテゴリが占める角度
+      entries.forEach(([category,amount],index) => {
         const angle = amount / total * Math.PI * 2;
-
-        context.beginPath();
-        context.moveTo(centerX, centerY);
-        context.arc(
-          centerX,
-          centerY,
-          radius,
-          startAngle,
-          startAngle + angle
-        );
-        context.closePath();
-
-        // カテゴリごとに色を変える
-        context.fillStyle = `hsl(${index * 55}, 65%, 55%)`;
-        context.fill();
-
-        startAngle += angle;
+        ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,radius,start,start+angle); ctx.closePath();
+        ctx.fillStyle = `hsl(${index*55},65%,55%)`; ctx.fill(); start += angle;
       });
 
-      // 円の中央に合計金額を表示
-      context.fillStyle = '#333';
-      context.font = 'bold 18px sans-serif';
-      context.textAlign = 'center';
-      context.fillText(yen(total), centerX, centerY + 7);
-
-      // グラフの下にカテゴリと金額を表示
-      context.textAlign = 'left';
-      context.font = '14px sans-serif';
-
-      let y = 285;
-
-      entries.forEach(([category, amount]) => {
-        context.fillStyle = '#333';
-        context.fillText(
-          `${category}: ${yen(amount)}`,
-          20,
-          y
-        );
-        y += 22;
-      });
+      ctx.fillStyle='#333'; ctx.font='bold 18px sans-serif'; ctx.textAlign='center'; ctx.fillText(yen(total),cx,cy+7);
+      ctx.textAlign='left'; ctx.font='14px sans-serif';
+      entries.forEach(([category,amount],index) => { ctx.fillStyle='#333'; ctx.fillText(`${category}: ${yen(amount)}`,20,285+index*22); });
     }
 
-
-    // ========================================
-    // 6. 「追加」ボタンの処理
-    // ========================================
-
-    document.getElementById('form').addEventListener('submit', (event) => {
-      // ページがリロードされるのを防ぐ
+    // 追加・編集
+    form.addEventListener('submit', event => {
       event.preventDefault();
+      const data = {date:date.value, amount:Number(amount.value), category:category.value, type:type.value};
 
-      // 入力されたデータを1つのオブジェクトにまとめる
-      const recordData = {
-        date: document.getElementById('date').value,
-        amount: Number(document.getElementById('amount').value),
-        category: document.getElementById('category').value,
-        type: document.getElementById('type').value
-      };
-
-      // 編集中なら既存データを更新
       if (editingId) {
-        const record = records.find(
-          (item) => item.id === editingId
-        );
-
-        Object.assign(record, recordData);
-
+        Object.assign(records.find(r => r.id === editingId), data);
         editingId = null;
         document.querySelector('.add').textContent = '追加';
-      }
-      // 編集中でなければ新しいデータを追加
-      else {
-        records.push({
-          id: Date.now(),
-          ...recordData
-        });
+      } else {
+        records.push({id:Date.now(), ...data});
       }
 
-      // 入力欄をリセット
       event.target.reset();
-      document.getElementById('date').value = iso(today);
-
-      // 保存＆画面更新
+      date.value = iso(today);
       save();
     });
 
-
-    // ========================================
-    // 7. データを削除する
-    // ========================================
+    function editRecord(id) {
+      const record = records.find(r => r.id === id);
+      date.value = record.date; amount.value = record.amount; category.value = record.category; type.value = record.type;
+      editingId = id; document.querySelector('.add').textContent = '更新';
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
 
     function removeRecord(id) {
-      records = records.filter(
-        (record) => record.id !== id
-      );
-
+      records = records.filter(record => record.id !== id);
       save();
     }
 
-
-    // ========================================
-    // 8. データを編集する
-    // ========================================
-
-    function editRecord(id) {
-      const record = records.find(
-        (item) => item.id === id
-      );
-
-      document.getElementById('date').value = record.date;
-      document.getElementById('amount').value = record.amount;
-      document.getElementById('category').value = record.category;
-      document.getElementById('type').value = record.type;
-
-      editingId = id;
-      document.querySelector('.add').textContent = '更新';
-    }
-
-
-    // ========================================
-    // 9. 月を変更したとき
-    // ========================================
-
-    document.getElementById('month').addEventListener('change', render);
-
-
-    // ========================================
-    // 10. CSVファイルを出力する
-    // ========================================
-
     function exportCSV() {
-      const recordsOfMonth = selected();
-
-      // CSVの1行目
-      let csv = '日付,金額,カテゴリ,種別\n';
-
-      // データをCSV形式に変換
-      csv += recordsOfMonth
-        .map((record) => {
-          const type = record.type === 'income' ? '収入' : '支出';
-
-          return `${record.date},${record.amount},${record.category},${type}`;
-        })
-        .join('\n');
-
-      // CSVファイルを作成
-      const blob = new Blob(
-        ['\ufeff' + csv],
-        { type: 'text/csv' }
-      );
-
-      // ダウンロードする
+      const rows = selected();
+      const csv = '日付,金額,カテゴリ,種別\n' + rows.map(r => `${r.date},${r.amount},${r.category},${r.type === 'income' ? '収入' : '支出'}`).join('\n');
+      const blob = new Blob(['\ufeff' + csv], {type:'text/csv'});
       const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = `kakeibo-${document.getElementById('month').value}.csv`;
-      link.click();
-
+      link.href = URL.createObjectURL(blob); link.download = `kakeibo-${month.value}.csv`; link.click();
       URL.revokeObjectURL(link.href);
     }
 
-
-    // ========================================
-    // 11. 全データ削除
-    // ========================================
-
     function clearAll() {
-      if (confirm('全データを削除しますか？')) {
-        records = [];
-        save();
-      }
+      if (confirm('全データを削除しますか？')) { records = []; save(); }
     }
 
-
-    // ========================================
-    // 12. 最初に画面を表示
-    // ========================================
-
-    render();
-
-    // ウィンドウサイズ変更時もグラフを調整
+    month.addEventListener('change', render);
     window.addEventListener('resize', render);
+    render();
   </script>
 </body>
 </html>
