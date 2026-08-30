@@ -1,52 +1,102 @@
 <!doctype html>
 <html lang="ja">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#1f2937"><title>生命保険 試験対策</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#172033">
+<title>生命保険 試験対策</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f3f4f6;color:#1f2937;font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif}.app{max-width:760px;margin:auto;padding:18px 14px 50px}.hero{background:#1f2937;color:#fff;border-radius:20px;padding:24px;margin-bottom:14px}.hero h1{margin:0 0 6px;font-size:25px}.hero p{margin:0;opacity:.85}.card{background:#fff;border-radius:18px;padding:18px;margin:12px 0;box-shadow:0 3px 14px #00000012}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btn{border:0;border-radius:12px;padding:13px;font-size:15px;font-weight:700;cursor:pointer}.primary{background:#1f2937;color:#fff}.secondary{background:#e5e7eb;color:#1f2937}.choice{display:block;width:100%;text-align:left;background:#fff;border:2px solid #e5e7eb;margin:9px 0;padding:14px;border-radius:12px;cursor:pointer;font-size:15px}.choice:hover{border-color:#9ca3af}.correct{border-color:#16a34a;background:#f0fdf4}.wrong{border-color:#dc2626;background:#fef2f2}.hidden{display:none}.top{display:flex;justify-content:space-between;gap:10px;align-items:center}.badge{display:inline-block;background:#e5e7eb;border-radius:99px;padding:5px 9px;font-size:12px}.progress{height:9px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin:12px 0}.progress i{display:block;height:100%;background:#1f2937;width:0}.explain{background:#f9fafb;border-left:4px solid #1f2937;padding:12px;margin-top:12px;line-height:1.7}.stat{font-size:28px;font-weight:800}.muted{color:#6b7280;font-size:13px}.list button{margin:5px 5px 0 0}.score{text-align:center}.score strong{font-size:48px}.review{padding:12px 0;border-bottom:1px solid #e5e7eb}.danger{color:#b91c1c}.footer{font-size:12px;color:#6b7280;text-align:center;margin-top:20px}@media(max-width:520px){.grid{grid-template-columns:1fr}}
-</style></head>
-<body><main class="app">
-<header class="hero"><h1>📝 生命保険 試験対策</h1><p>専門課程・変額保険販売資格をオリジナル問題で学習</p></header>
-<section id="home" class="card"><h2>今日の学習</h2><div class="grid"><button class="btn primary" onclick="start('専門課程','random')">専門課程 10問</button><button class="btn primary" onclick="start('変額保険販売資格','random')">変額資格 10問</button><button class="btn secondary" onclick="start('専門課程','weak')">専門課程 苦手</button><button class="btn secondary" onclick="start('変額保険販売資格','weak')">変額資格 苦手</button></div></section>
-<section class="card"><div class="top"><h2>📊 学習成績</h2><button class="btn secondary" onclick="showStats()">詳細</button></div><div class="grid"><div><div class="stat" id="totalCorrect">0%</div><div class="muted">総合正解率</div></div><div><div class="stat" id="streak">0</div><div class="muted">最高連続正解</div></div></div></section>
+*{box-sizing:border-box}body{margin:0;background:#f3f5f8;color:#172033;font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif}.app{max-width:820px;margin:auto;padding:16px 14px 50px}.hero{background:#172033;color:#fff;border-radius:20px;padding:22px;margin-bottom:14px}.hero h1{margin:0 0 6px;font-size:24px}.hero p{margin:0;opacity:.85;line-height:1.6}.card{background:#fff;border-radius:18px;padding:18px;margin:12px 0;box-shadow:0 3px 14px #0001}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btn{border:0;border-radius:11px;padding:12px;font-size:15px;font-weight:700;cursor:pointer}.primary{background:#172033;color:#fff}.secondary{background:#e7eaf0;color:#172033}.choice{display:block;width:100%;text-align:left;background:#fff;border:2px solid #e2e6ed;margin:9px 0;padding:14px;border-radius:12px;cursor:pointer;font-size:15px;line-height:1.55}.choice:hover{border-color:#7b8799}.choice.correct{border-color:#16934a;background:#effbf4}.choice.wrong{border-color:#d83b3b;background:#fff1f1}.choice:disabled{cursor:default}.hidden{display:none!important}.top{display:flex;justify-content:space-between;gap:10px;align-items:center}.badge{display:inline-block;background:#e7eaf0;border-radius:99px;padding:5px 9px;font-size:12px}.progress{height:9px;background:#e2e6ed;border-radius:99px;overflow:hidden;margin:12px 0}.progress i{display:block;height:100%;background:#172033;width:0}.explain{background:#f7f8fa;border-left:4px solid #172033;padding:13px;margin-top:12px;line-height:1.8}.stat{font-size:28px;font-weight:800}.muted{color:#667085;font-size:13px}.score{text-align:center}.score strong{font-size:48px}.review{padding:12px 0;border-bottom:1px solid #e3e6eb;line-height:1.6}.notice{font-size:13px;background:#fff8df;border:1px solid #f0d77a;border-radius:10px;padding:11px;line-height:1.6}.danger{color:#b42318}.footer{font-size:12px;color:#667085;text-align:center;margin-top:20px;line-height:1.6}@media(max-width:560px){.grid{grid-template-columns:1fr}.hero h1{font-size:21px}}
+</style>
+</head>
+<body>
+<main class="app">
+<header class="hero"><h1>📝 生命保険 試験対策</h1><p>専門課程・変額保険販売資格を、実戦レベルのオリジナル問題で攻略。</p></header>
+<section id="home" class="card">
+<h2>🔥 実戦演習</h2>
+<div class="notice">過去問で見られる「正誤判定・ひっかけ・知識の組み合わせ」を意識した問題に強化しています。実際の試験問題そのものは転載していません。</div>
+<div class="grid" style="margin-top:12px">
+<button class="btn primary" onclick="start('専門課程','random',10)">専門課程 10問</button>
+<button class="btn primary" onclick="start('専門課程','random',25)">専門課程 25問</button>
+<button class="btn secondary" onclick="start('変額保険販売資格','random',10)">変額資格 10問</button>
+<button class="btn secondary" onclick="start('変額保険販売資格','random',25)">変額資格 25問</button>
+<button class="btn secondary" onclick="start('専門課程','weak',20)">専門課程 苦手</button>
+<button class="btn secondary" onclick="start('変額保険販売資格','weak',20)">変額資格 苦手</button>
+</div>
+</section>
+<section class="card"><div class="top"><h2>📊 学習成績</h2><button class="btn secondary" onclick="showStats()">詳細</button></div><div class="grid"><div><div class="stat" id="totalCorrect">0%</div><div class="muted">総合正解率</div></div><div><div class="stat" id="attempts">0</div><div class="muted">解答数</div></div></div></section>
 <section id="quiz" class="card hidden"><div class="top"><span id="examBadge" class="badge"></span><strong id="counter"></strong></div><div class="progress"><i id="progress"></i></div><h2 id="question"></h2><div id="choices"></div><div id="explanation" class="explain hidden"></div><button id="next" class="btn primary hidden" style="width:100%;margin-top:12px" onclick="nextQuestion()">次の問題</button></section>
 <section id="result" class="card hidden score"><h2>🎉 結果</h2><strong id="score"></strong><p id="resultText"></p><button class="btn primary" onclick="backHome()">ホームへ</button></section>
 <section id="stats" class="card hidden"><h2>📊 成績詳細</h2><div id="statsBody"></div><button class="btn secondary" onclick="backHome()">戻る</button></section>
-<div class="footer">※学習用のオリジナル問題です。実際の試験問題そのものではありません。</div>
+<div class="footer">※問題は試験対策用に独自作成したものです。公式問題・過去問の転載ではありません。制度・税制等は受験時の公式教材を優先してください。</div>
 </main>
 <script>
+/* =========================================================
+   問題データ
+   公式の試験範囲・公開サンプル・過去問解説で確認できる論点を参考に、
+   問題文と選択肢は独自に作成しています。
+   ========================================================= */
 const questions=[
-{id:1,exam:'専門課程',cat:'生命保険の基礎',q:'生命保険契約において、保険事故が発生した場合に保険金を受け取る人を何というか。',c:['契約者','被保険者','保険金受取人','保険者'],a:2,e:'保険金受取人は、保険事故が発生したときに保険金を受け取る人です。'},
-{id:2,exam:'専門課程',cat:'生命保険の基礎',q:'終身保険の特徴として最も適切なものはどれか。',c:['保険期間が一定期間だけである','保障が一生涯続く','満期時に必ず満期保険金を受け取る','保険料は必ず毎年変動する'],a:1,e:'終身保険は、原則として保障が一生涯続く死亡保険です。'},
-{id:3,exam:'専門課程',cat:'税・相続',q:'法定相続人について、配偶者はどのような位置づけか。',c:['常に法定相続人ではない','他の相続人がいる場合だけ相続人になる','常に法定相続人となる','遺言がある場合だけ相続人になる'],a:2,e:'配偶者は常に法定相続人となり、子などの血族相続人とともに相続します。'},
-{id:4,exam:'専門課程',cat:'社会保障',q:'公的年金制度について、老齢基礎年金を支給する主体はどれか。',c:['日本年金機構','生命保険会社','市区町村のみ','金融庁'],a:0,e:'公的年金の実務では日本年金機構が年金の適用・保険料徴収・給付などを担っています。'},
-{id:5,exam:'専門課程',cat:'コンプライアンス',q:'生命保険募集人が顧客に商品を説明する際に重要な姿勢はどれか。',c:['不利益な事項は説明しない','顧客の意向や理解を確認する','契約を急がせる','比較説明を避ける'],a:1,e:'顧客の意向を把握し、重要事項や不利益事項を適切に説明して理解を確認することが重要です。'},
-{id:6,exam:'専門課程',cat:'商品',q:'定期保険の一般的な特徴はどれか。',c:['一定期間を保障する','必ず一生涯保障する','必ず解約返戻金が大きい','保険期間を設定できない'],a:0,e:'定期保険は一定の保険期間を定め、その期間中の死亡などを保障する保険です。'},
-{id:7,exam:'専門課程',cat:'税・相続',q:'生命保険料控除の対象となる保険契約について、一般的に重要な確認事項はどれか。',c:['契約内容や保険料の区分','被保険者の血液型','営業担当者の所属','保険会社の本店所在地だけ'],a:0,e:'生命保険料控除では契約内容や保険料の区分などを確認する必要があります。'},
-{id:8,exam:'専門課程',cat:'企業向け保険',q:'企業向け生命保険を活用する際に重要なのはどれか。',c:['企業の保障ニーズを確認する','個人の趣味だけで商品を選ぶ','税務を一切確認しない','契約目的を確認しない'],a:0,e:'企業向け保険では、経営者・従業員の保障、事業保障など企業のニーズを把握することが基本です。'},
-{id:9,exam:'専門課程',cat:'FP・コンサルティング',q:'保険提案で最初に行うこととして適切なのはどれか。',c:['最も高額な商品を勧める','顧客の意向やライフプランを把握する','契約書に署名してもらう','保険料だけを比較する'],a:1,e:'適切な提案には、顧客の意向、家族構成、収支、将来計画などの把握が重要です。'},
-{id:10,exam:'専門課程',cat:'生命保険の基礎',q:'契約者と被保険者の違いとして正しいものはどれか。',c:['契約者は保険会社、被保険者は代理店','契約者は契約上の権利義務を持ち、被保険者は保障の対象となる人','両者は必ず同一人物','被保険者は必ず保険金受取人'],a:1,e:'契約者は保険契約を締結し契約上の権利義務を持つ人、被保険者は保険事故の対象となる人です。'},
-{id:101,exam:'変額保険販売資格',cat:'変額保険',q:'変額保険の保険金額や解約返戻金等の特徴として適切なのはどれか。',c:['運用実績の影響を受ける','常に一定である','銀行預金と同じである','必ず元本が保証される'],a:0,e:'変額保険は特別勘定の運用実績に応じて、保険金額や解約返戻金等が変動します。'},
-{id:102,exam:'変額保険販売資格',cat:'変額保険',q:'変額保険の販売で特に重要な説明はどれか。',c:['運用リスク等の重要事項','担当者の趣味','会社の社員数','店舗の営業時間だけ'],a:0,e:'変額保険では運用実績による変動など、顧客が負担するリスクや重要事項を適切に説明することが重要です。'},
-{id:103,exam:'変額保険販売資格',cat:'特別勘定',q:'変額保険の資産運用に関係する勘定は一般に何と呼ばれるか。',c:['普通勘定のみ','特別勘定','給与勘定','決済勘定'],a:1,e:'変額保険では、運用実績を契約者に反映させるため特別勘定が用いられます。'},
-{id:104,exam:'変額保険販売資格',cat:'リスク',q:'変額保険の運用実績が悪化した場合に考えられることはどれか。',c:['解約返戻金等が減少する可能性がある','必ず増加する','変動しない','銀行が補てんする'],a:0,e:'運用実績が悪化すると、解約返戻金等が減少する可能性があります。'},
-{id:105,exam:'変額保険販売資格',cat:'コンプライアンス',q:'変額保険の募集において適切なのはどれか。',c:['リスクを説明しない','顧客の意向を確認し適切に説明する','利益を保証する','損失が出ないと断定する'],a:1,e:'変額保険は運用リスクを伴うため、顧客の意向確認とリスクを含む適切な説明が重要です。'},
-{id:106,exam:'変額保険販売資格',cat:'販売資格',q:'変額保険販売資格試験の位置づけとして正しいものはどれか。',c:['変額保険販売に必要な知識を確認する','一般課程の代わりになる','税理士資格である','誰でも自由に販売できる資格である'],a:0,e:'生命保険協会は変額保険の販売に必要な知識を修得するための資格試験として位置づけています。'},
-{id:107,exam:'変額保険販売資格',cat:'商品',q:'変額保険と定額保険の違いとして適切なのはどれか。',c:['変額保険は運用実績が保険金額等に影響する','定額保険は必ず株式で運用する','変額保険は絶対に価格変動しない','両者に違いはない'],a:0,e:'変額保険は運用実績が契約内容に影響する点が重要な特徴です。'},
-{id:108,exam:'変額保険販売資格',cat:'顧客保護',q:'顧客に変額保険を提案する際、適切な対応はどれか。',c:['顧客の資産状況や意向等を踏まえる','全員に同じ商品を勧める','短時間で契約を迫る','損失可能性を隠す'],a:0,e:'顧客の意向や資産状況等を踏まえ、商品特性やリスクを適切に説明することが重要です。'},
-{id:109,exam:'変額保険',cat:'運用',q:'特別勘定の運用実績について正しいものはどれか。',c:['将来の運用成果を確実に保証できる','市場環境等により変動する','必ず毎年プラスになる','契約者には関係しない'],a:1,e:'特別勘定の運用実績は市場環境等の影響を受け、将来の成果が保証されるものではありません。'},
-{id:110,exam:'変額保険販売資格',cat:'販売',q:'変額保険の販売資格者について正しいものはどれか。',c:['必要な資格・登録等を満たした者が販売する','資格は不要','誰でも販売できる','契約者が資格を持てばよい'],a:0,e:'変額保険の販売には、生命保険協会の制度上の要件を満たすことが必要です。'}
+/* ==================== 専門課程 ==================== */
+{id:1,exam:'専門課程',cat:'保険料の仕組み',q:'生命保険料の計算基礎に関する次の記述のうち、最も適切なものはどれか。',c:['予定利率を高く設定するほど、一般に保険料は高くなる','純保険料は保険金・給付金の支払いに充てる財源であり、付加保険料は事業運営に必要な費用に対応する','付加保険料は死亡率と予定利率だけで決まる','予定事業費率が低いほど、純保険料も必ず低下する'],a:1,e:'保険料は大きく純保険料と付加保険料からなり、純保険料は予定死亡率・予定利率等、付加保険料は予定事業費率等を基礎として計算されます。'},
+{id:2,exam:'専門課程',cat:'保険料の仕組み',q:'予定利率についての説明として正しいものはどれか。',c:['予定利率を高く見込むほど、予定運用収益が大きくなるため、一般に保険料を低く設定できる','予定利率は契約者の実際の投資収益率を保証する数字である','予定利率は死亡率を表す数字である','予定利率が高いほど付加保険料が増える'],a:0,e:'予定利率は保険料の計算上、将来の運用収益をあらかじめ見込むための利率です。高く見込むほど、その分保険料を低くできます。'},
+{id:3,exam:'専門課程',cat:'生命表',q:'生命表について、次のうち正しいものはどれか。',c:['各年齢の平均余命を知ることはできない','0歳の平均余命を平均寿命という','生命表は保険会社の営業成績だけを示す表である','経験生命表は人口統計とは無関係である'],a:1,e:'生命表から各年齢の平均余命を知ることができ、0歳の平均余命を平均寿命と呼びます。'},
+{id:4,exam:'専門課程',cat:'配当',q:'生命保険契約の剰余金・配当に関する説明として最も適切なものはどれか。',c:['剰余金は必ず毎年同額の配当として契約者に支払われる','予定利率による運用収入より実際の運用収入が多いことなどにより剰余が生じる場合がある','配当金は保険会社の利益とは無関係である','無配当保険には契約者への保障がない'],a:1,e:'剰余金は、死差益・利差益・費差益などの要因によって生じます。配当の有無や方法は契約によって異なります。'},
+{id:5,exam:'専門課程',cat:'商品',q:'養老保険についての記述として正しいものはどれか。',c:['保険期間中の死亡保障だけで、満期保険金はない','死亡保険金と満期保険金は一般に同額である','一生涯の死亡保障のみを目的とする','保険期間を設定できない'],a:1,e:'養老保険は一定期間の死亡保障を備え、満期まで生存した場合には満期保険金を受け取る仕組みです。一般的な養老保険では死亡保険金と満期保険金が同額です。'},
+{id:6,exam:'専門課程',cat:'商品',q:'個人年金保険のうち、保証期間付終身年金の説明として最も適切なものはどれか。',c:['保証期間中は生死に関係なく年金が支払われ、保証期間経過後も生存していれば終身にわたり支払われる','保証期間中だけ支払われ、以後は必ず終了する','満期時に一括で死亡保険金だけが支払われる','被保険者の死亡後も必ず一生涯遺族に支払われる'],a:0,e:'保証期間付終身年金では、保証期間中は生死にかかわらず年金が支払われ、保証期間後も生存している限り終身で支払われます。'},
+{id:7,exam:'専門課程',cat:'商品',q:'特定疾病保障保険について、一般的な仕組みとして正しいものはどれか。',c:['対象となる特定疾病に所定の状態で該当した場合、生前に特定疾病保険金が支払われる商品がある','特定疾病に該当しても死亡するまで一切給付されない','対象疾病は契約者が自由に毎年変更できる','支払事由は保険料の払込額だけで決まる'],a:0,e:'特定疾病保障保険では、がん・急性心筋梗塞・脳卒中などについて、約款所定の支払事由に該当すると生前に保険金が支払われる商品があります。'},
+{id:8,exam:'専門課程',cat:'保険金支払',q:'死亡保険金を支払わない場合について、最も適切なものはどれか。',c:['契約後の自殺は必ず無条件で支払われる','約款所定の免責事由に該当する場合、死亡保険金が支払われないことがある','契約者が死亡した場合は被保険者の状態に関係なく支払われる','保険会社は約款上の免責事由を定めることができない'],a:1,e:'自殺など一定の事由については、契約日・復活日からの期間等に応じた約款上の免責規定があります。細かな取扱いは商品・約款を確認します。'},
+{id:9,exam:'専門課程',cat:'契約',q:'契約者・被保険者・保険金受取人の組み合わせについて、正しいものはどれか。',c:['被保険者は必ず保険料を支払う','契約者は契約上の権利義務を持ち、被保険者は保障の対象となる','保険金受取人は必ず契約者本人である','契約者と被保険者は必ず同一人でなければならない'],a:1,e:'契約者と被保険者は異なることがあり、契約者が契約上の権利義務を持ち、被保険者が保障の対象となります。'},
+{id:10,exam:'専門課程',cat:'募集',q:'生命保険募集における意向把握・確認について、最も適切なものはどれか。',c:['顧客の意向にかかわらず販売実績の高い商品を優先する','顧客の意向を把握し、それに沿った商品提案・確認を行う','保険料が安ければ意向確認は不要である','契約締結後だけ意向を確認すればよい'],a:1,e:'顧客本位の業務運営の観点から、顧客の意向を把握し、意向に沿った提案・契約内容の確認を行うことが重要です。'},
+{id:11,exam:'専門課程',cat:'募集',q:'比較推奨販売に関する説明として適切なものはどれか。',c:['顧客が何を重視するかを確認せず、募集人が好きな商品だけを提示する','比較・推奨する場合には、顧客の意向や商品特性を踏まえて適切に説明する','他社商品の情報はすべて説明禁止である','推奨理由を説明する必要はない'],a:1,e:'比較・推奨を行う際には、顧客の意向を踏まえ、商品特性や推奨理由などを適切に説明することが重要です。'},
+{id:12,exam:'専門課程',cat:'税・相続',q:'死亡保険金の課税関係を考える際、最初に確認すべき組み合わせとして最も重要なものはどれか。',c:['契約者・被保険者・受取人の関係','募集人の年齢だけ','保険会社の本店所在地だけ','保険証券の色だけ'],a:0,e:'死亡保険金の税務は、契約者・被保険者・受取人の関係によって所得税・相続税・贈与税の区分が変わり得るため、まず当事者関係を確認します。'},
+{id:13,exam:'専門課程',cat:'税・相続',q:'契約者＝被保険者＝夫、死亡保険金受取人＝妻という生命保険契約で、夫が死亡して妻が保険金を受け取った場合、一般的にどの税が問題となるか。',c:['相続税','所得税','贈与税','消費税'],a:0,e:'被保険者と保険料負担者が夫、受取人が妻という典型的な死亡保険金では、一般に相続税の課税対象となります。'},
+{id:14,exam:'専門課程',cat:'税・相続',q:'契約者＝保険料負担者＝夫、被保険者＝妻、満期保険金受取人＝夫という契約で、満期保険金を夫が受け取る場合、一般的にどの税が問題となるか。',c:['相続税','所得税','贈与税','固定資産税'],a:1,e:'保険料負担者と満期保険金受取人が同一人である場合、一般に受取人本人の所得として所得税が問題となります。'},
+{id:15,exam:'専門課程',cat:'税・相続',q:'法定相続について、配偶者と子が相続人となる場合の法定相続分として正しいものはどれか。',c:['配偶者1/2、子全体1/2','配偶者1/3、子全体2/3','配偶者2/3、子全体1/3','配偶者1/4、子全体3/4'],a:0,e:'配偶者と子が相続人の場合、法定相続分は配偶者2分の1、子全体で2分の1です。子が複数なら子の2分の1を均等に分けます。'},
+{id:16,exam:'専門課程',cat:'社会保障',q:'公的年金の「平均余命」に関する説明として正しいものはどれか。',c:['その年齢の人が今後平均して生存する年数','その年齢までに支払った保険料の平均額','その年齢から必ず生存できる年数','平均寿命と必ず同じ意味である'],a:0,e:'平均余命は、ある年齢の人がその後平均して何年生きるかを示す指標です。0歳の平均余命が平均寿命です。'},
+{id:17,exam:'専門課程',cat:'社会保障',q:'公的医療保険と民間医療保険の関係について、最も適切な説明はどれか。',c:['民間医療保険は公的保障をすべて置き換えるための制度である','公的保障で不足する自己負担や収入減少等への備えとして民間保障を検討できる','公的医療保険に加入していれば民間保険は法律上加入できない','民間医療保険の給付額は公的医療保険の給付額と同じである'],a:1,e:'民間保険は公的保障を踏まえ、不足する保障を補完する目的で活用できます。'},
+{id:18,exam:'専門課程',cat:'企業向け保険',q:'法人契約の生命保険を提案する際、最も優先して確認すべき事項はどれか。',c:['会社のロゴの色','契約目的、保障ニーズ、資金負担能力など','社長の趣味','担当者が売りたい商品だけ'],a:1,e:'法人契約では、事業保障、役員・従業員保障、資金繰り等の目的を明確にし、企業の実情に合う提案を行う必要があります。'},
+{id:19,exam:'専門課程',cat:'顧客本位',q:'保険の見直し提案で特に注意すべきことはどれか。',c:['新契約の保険料だけを見る','既契約を解約することによる不利益や新契約の加入条件等を確認する','既契約の内容は確認しない','健康状態は新契約に影響しないと断定する'],a:1,e:'乗換えでは、解約返戻金、保障の空白、新契約の告知・引受け、保険料負担など複数の不利益を確認する必要があります。'},
+{id:20,exam:'専門課程',cat:'総合',q:'次のうち、生命保険の提案プロセスとして最も適切な順序はどれか。',c:['契約→意向把握→必要保障額確認→アフターフォロー','意向・状況把握→必要保障・目的の整理→商品提案・説明→意向確認・契約→アフターフォロー','商品選定→契約→顧客の家族構成確認→説明','保険料比較→契約→意向確認'],a:1,e:'顧客の状況・意向を把握し、必要保障を整理した上で商品を提案・説明し、契約後もフォローする流れが基本です。'},
+{id:21,exam:'専門課程',cat:'正誤・知識',q:'次の記述のうち誤っているものはどれか。「予定事業費率による事業費より実際の事業費が少なかった場合、その差が費差益となることがある。」',c:['正しい','誤っている','契約者配当とは無関係なので必ず誤り','予定利率と同じ意味なので誤り'],a:0,e:'実際の事業費が予定事業費より少なければ、費差益が生じる要因となります。'},
+{id:22,exam:'専門課程',cat:'正誤・知識',q:'次の記述のうち正しいものはどれか。「終身保険は保険期間が一生涯であるため、一般に満期保険金が支払われる。」',c:['正しい','誤っている','保険料を一括払いした場合だけ正しい','定期保険なら正しい'],a:1,e:'終身保険は保障が一生涯続く死亡保険ですが、一般に養老保険のような満期保険金はありません。'},
+{id:23,exam:'専門課程',cat:'正誤・知識',q:'次の記述のうち正しいものはどれか。「平均寿命は、ある年齢の人が今後平均して生存できる年数を表す。」',c:['正しい','誤っている','65歳以上についてだけ正しい','保険会社だけが使う用語である'],a:1,e:'その年齢の人が今後平均して生存する年数は平均余命です。0歳の平均余命を平均寿命と呼びます。'},
+{id:24,exam:'専門課程',cat:'総合',q:'顧客が「保険料が一番安いものなら、保障内容は確認しなくてよい」と述べた。募集人の対応として適切なのはどれか。',c:['そのまま最安商品を契約させる','保険料だけでなく保障内容・期間・給付条件等を確認し、顧客の意向との適合性を説明する','高額商品だけを提案する','意向確認を省略する'],a:1,e:'保険料だけでは商品選択の適切性を判断できません。保障内容や給付条件、期間などを含めて意向との適合を確認します。'},
+{id:25,exam:'専門課程',cat:'総合',q:'契約者から「告知は軽く書けば審査に通りやすい」と相談された。最も適切な対応はどれか。',c:['通りやすい書き方を教える','事実を正確に告知する必要があることを説明し、虚偽・不告知を勧めない','募集人が代わりに記入する','健康状態を隠すよう助言する'],a:1,e:'告知は正確に行う必要があり、虚偽告知や不告知を勧めることは適切ではありません。'},
+
+/* ==================== 変額保険販売資格 ==================== */
+{id:101,exam:'変額保険販売資格',cat:'基本構造',q:'変額保険の特徴について最も適切なものはどれか。',c:['特別勘定の運用実績が保険金額や解約返戻金等に影響する','運用実績にかかわらず解約返戻金は必ず払込保険料を上回る','銀行預金と同様に元本が保証される','運用先を契約者が選択することは一切できない'],a:0,e:'変額保険は特別勘定の運用実績に応じて、契約の価値等が変動することが重要な特徴です。'},
+{id:102,exam:'変額保険販売資格',cat:'普通勘定・特別勘定',q:'変額保険における特別勘定について正しいものはどれか。',c:['運用実績を契約者側に反映させるための勘定である','保険会社の一般的な事業費だけを管理する勘定である','預金保険制度の対象となる預金口座である','契約者の給与を管理する口座である'],a:0,e:'特別勘定は、運用実績を変額保険契約の積立金等に反映させるために設けられています。'},
+{id:103,exam:'変額保険販売資格',cat:'運用リスク',q:'特別勘定の運用実績が悪化した場合、一般にどのような影響が考えられるか。',c:['解約返戻金等が減少する可能性がある','必ず保険金が増加する','保険会社が差額を全額補償する','契約者には一切影響しない'],a:0,e:'変額保険では運用実績が悪化すると、解約返戻金等が減少する可能性があります。'},
+{id:104,exam:'変額保険販売資格',cat:'運用リスク',q:'変額保険の募集時に「過去の運用実績が良かったので、今後も同じ収益率になる」と説明することについて正しいものはどれか。',c:['適切である','将来の運用成果を保証するような説明は不適切である','100万円以上の契約なら適切である','契約者が希望すれば必ず説明してよい'],a:1,e:'過去の実績は将来の運用成果を保証するものではありません。利益を確実視させる説明は避ける必要があります。'},
+{id:105,exam:'変額保険販売資格',cat:'商品説明',q:'変額保険の商品説明で、特に顧客が理解すべき事項として適切な組み合わせはどれか。',c:['運用リスク・費用・保障内容等','営業担当者の販売目標だけ','会社の創業年だけ','店舗の内装だけ'],a:0,e:'変額保険は運用リスクを伴うため、商品特性、リスク、費用、保障内容等を適切に説明することが重要です。'},
+{id:106,exam:'変額保険販売資格',cat:'販売資格',q:'生命保険協会の制度上、変額保険販売資格試験の受験対象について正しいものはどれか。',c:['専門課程試験の合格者であること等、一定の要件がある','一般消費者なら誰でも受験できる','専門課程の合格は一切関係しない','変額保険を購入した人だけが受験できる'],a:0,e:'生命保険協会は、登録済み募集人で専門課程試験合格者であること等、一定の要件を対象者に求めています。'},
+{id:107,exam:'変額保険販売資格',cat:'顧客保護',q:'顧客が変額保険を「元本保証の商品」と誤認している場合、募集人の対応として適切なのはどれか。',c:['誤認したまま契約を進める','運用によって価値が変動することやリスクを説明し、理解を確認する','利益だけを説明する','契約後に説明すればよい'],a:1,e:'変額保険では元本保証と誤認させないことが重要です。リスクを含む商品特性を説明し、顧客の理解を確認します。'},
+{id:108,exam:'変額保険販売資格',cat:'特別勘定',q:'特別勘定の運用対象について、最も適切な考え方はどれか。',c:['運用方針や資産構成は商品・特別勘定ごとに異なり得る','すべての特別勘定が同じ資産構成である','必ず現金だけで運用する','必ず国内株式だけで運用する'],a:0,e:'特別勘定には複数の運用方針があり、資産構成等は商品や勘定によって異なります。'},
+{id:109,exam:'変額保険販売資格',cat:'費用',q:'変額保険の説明で「運用実績だけ見ればよく、費用は確認しなくてよい」とする考え方について正しいものはどれか。',c:['正しい','誤っている。費用等も商品選択の重要な情報である','契約金額が少なければ正しい','法人契約なら正しい'],a:1,e:'運用実績だけでなく、保険関係費用や運用に関する費用等、契約者が負担するコストも確認することが重要です。'},
+{id:110,exam:'変額保険販売資格',cat:'総合',q:'変額保険の提案として最も適切なものはどれか。',c:['顧客の意向・リスク許容度等を確認し、商品特性とリスクを説明した上で判断してもらう','高い収益を約束して契約を促す','過去の最高収益率だけを示す','損失可能性を説明しない'],a:0,e:'変額保険では顧客の意向等を把握し、商品特性・リスク・費用等を説明して適切に判断できるようにすることが重要です。'},
+{id:111,exam:'変額保険販売資格',cat:'正誤・知識',q:'次の記述のうち誤っているものはどれか。「変額保険では、特別勘定の運用実績が悪化しても、解約返戻金等には影響しない。」',c:['正しい','誤っている','商品によらず必ず正しい','保険料払込中だけ正しい'],a:1,e:'変額保険では特別勘定の運用実績が解約返戻金等に影響するため、この記述は誤りです。'},
+{id:112,exam:'変額保険販売資格',cat:'正誤・知識',q:'次の記述のうち正しいものはどれか。「変額保険の将来の運用成果を、募集人が確実に保証することは適切ではない。」',c:['正しい','誤っている','顧客が希望すれば正しい','法人契約なら正しい'],a:0,e:'将来の運用成果は保証できません。利益を確実視させる説明は避ける必要があります。'},
+{id:113,exam:'変額保険販売資格',cat:'総合',q:'顧客が「値下がりしたら保険会社が元本を必ず補てんしてくれる」と話している。最も適切な対応はどれか。',c:['そのまま契約する','商品上の保証の範囲と運用リスクを確認し、誤解を解消する','値下がりしないと約束する','説明を省略する'],a:1,e:'変額保険には運用リスクがあるため、顧客がどのような保証を想定しているか確認し、実際の保障・保証の範囲を正確に説明します。'},
+{id:114,exam:'変額保険販売資格',cat:'販売資格',q:'変額保険販売資格の趣旨として最も適切なものはどれか。',c:['変額保険・変額年金保険の販売に必要な知識を修得する','一般課程を完全に代替する','投資助言業の登録を代替する','税理士業務を行えるようにする'],a:0,e:'生命保険協会は、変額保険・変額年金保険の販売に必要な知識を修得することを目的として試験を実施しています。'},
+{id:115,exam:'変額保険販売資格',cat:'総合',q:'変額保険を提案する際、顧客の資産状況や投資経験等を確認する意義として最も適切なものはどれか。',c:['顧客の意向やリスクに対する理解等を踏まえた適切な提案につなげるため','販売実績を上げるためだけ','契約者の税額を必ず決めるため','運用益を保証するため'],a:0,e:'顧客の状況を把握することで、商品特性・リスクを理解した上で適切な提案ができるようになります。'}
 ];
-let state={questions:[],index:0,correct:0,answered:false,mode:'random'};let stats=JSON.parse(localStorage.getItem('hokenStats')||'{}');
-const $=id=>document.getElementById(id);function saveStats(){localStorage.setItem('hokenStats',JSON.stringify(stats))}function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
-function start(exam,mode){let pool=questions.filter(q=>q.exam===exam);if(mode==='weak')pool=pool.filter(q=>(stats[q.id]?.attempts||0)>0&&stats[q.id].correct<stats[q.id].attempts);if(!pool.length)return alert('苦手問題はまだありません。まず通常問題に挑戦しましょう！');state.questions=shuffle(pool).slice(0,10);state.index=0;state.correct=0;state.mode=mode;$('home').classList.add('hidden');$('stats').classList.add('hidden');$('result').classList.add('hidden');$('quiz').classList.remove('hidden');showQuestion()}
-function showQuestion(){const q=state.questions[state.index];state.answered=false;$('examBadge').textContent=q.exam+' / '+q.cat;$('counter').textContent=`${state.index+1} / ${state.questions.length}`;$('progress').style.width=((state.index)/state.questions.length*100)+'%';$('question').textContent=q.q;$('choices').innerHTML=q.c.map((x,i)=>`<button class="choice" onclick="answer(${i})">${String.fromCharCode(65+i)}. ${x}</button>`).join('');$('explanation').classList.add('hidden');$('next').classList.add('hidden')}
+
+let state={questions:[],index:0,correct:0,answered:false};
+let stats=JSON.parse(localStorage.getItem('hokenStats')||'{}');
+const $=id=>document.getElementById(id);
+function saveStats(){localStorage.setItem('hokenStats',JSON.stringify(stats))}
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function start(exam,mode,count){let pool=questions.filter(q=>q.exam===exam);if(mode==='weak')pool=pool.filter(q=>stats[q.id]?.attempts>0&&stats[q.id].correct<stats[q.id].attempts);if(!pool.length)return alert('苦手問題はまだありません。まず通常問題に挑戦しよう！');state.questions=shuffle(pool).slice(0,Math.min(count,pool.length));state.index=0;state.correct=0;state.answered=false;$('home').classList.add('hidden');$('stats').classList.add('hidden');$('result').classList.add('hidden');$('quiz').classList.remove('hidden');showQuestion()}
+function showQuestion(){const q=state.questions[state.index];state.answered=false;$('examBadge').textContent=q.exam+' / '+q.cat;$('counter').textContent=`${state.index+1} / ${state.questions.length}`;$('progress').style.width=(state.index/state.questions.length*100)+'%';$('question').textContent=q.q;$('choices').innerHTML=q.c.map((x,i)=>`<button class="choice" onclick="answer(${i})">${String.fromCharCode(65+i)}. ${x}</button>`).join('');$('explanation').classList.add('hidden');$('next').classList.add('hidden');window.scrollTo({top:0,behavior:'smooth'})}
 function answer(i){if(state.answered)return;state.answered=true;const q=state.questions[state.index],buttons=[...document.querySelectorAll('.choice')];buttons.forEach((b,n)=>{b.disabled=true;if(n===q.a)b.classList.add('correct');if(n===i&&i!==q.a)b.classList.add('wrong')});const ok=i===q.a;if(ok)state.correct++;stats[q.id]??={attempts:0,correct:0};stats[q.id].attempts++;if(ok)stats[q.id].correct++;saveStats();$('explanation').innerHTML=`<strong>${ok?'⭕ 正解！':'❌ 不正解'}</strong><br>${q.e}`;$('explanation').classList.remove('hidden');$('next').textContent=state.index===state.questions.length-1?'結果を見る':'次の問題';$('next').classList.remove('hidden');updateStats()}
 function nextQuestion(){if(state.index===state.questions.length-1){finish();return}state.index++;showQuestion()}
-function finish(){$('quiz').classList.add('hidden');$('result').classList.remove('hidden');const total=state.questions.length,rate=Math.round(state.correct/total*100);$('score').textContent=`${state.correct} / ${total}`;$('resultText').textContent=`正解率 ${rate}%！${rate>=70?'合格ラインを意識できる結果やで👍':'もう一周して苦手をつぶそう💪'}`}
+function finish(){$('quiz').classList.add('hidden');$('result').classList.remove('hidden');const total=state.questions.length,rate=Math.round(state.correct/total*100);$('score').textContent=`${state.correct} / ${total}`;$('resultText').textContent=`正解率 ${rate}%${rate>=70?'　合格ライン突破！🔥':'　もう一周して弱点をつぶそう💪'}`}
 function backHome(){$('quiz').classList.add('hidden');$('result').classList.add('hidden');$('stats').classList.add('hidden');$('home').classList.remove('hidden');updateStats()}
-function updateStats(){let a=Object.values(stats).reduce((s,x)=>s+x.attempts,0),c=Object.values(stats).reduce((s,x)=>s+x.correct,0);$('totalCorrect').textContent=a?Math.round(c/a*100)+'%':'0%';let best=0,cur=0;questions.forEach(q=>{if(stats[q.id]?.attempts){if(stats[q.id].correct===stats[q.id].attempts)cur++;else cur=0;best=Math.max(best,cur)}});$('streak').textContent=best}
+function updateStats(){let a=Object.values(stats).reduce((s,x)=>s+x.attempts,0),c=Object.values(stats).reduce((s,x)=>s+x.correct,0);$('totalCorrect').textContent=a?Math.round(c/a*100)+'%':'0%';$('attempts').textContent=a}
 function showStats(){$('home').classList.add('hidden');$('stats').classList.remove('hidden');let rows=questions.map(q=>{let s=stats[q.id]||{attempts:0,correct:0};return`<div class="review"><b>${q.exam}</b>｜${q.cat}<br><span class="muted">${s.attempts?`挑戦 ${s.attempts}回 / 正解 ${s.correct}回 / 正解率 ${Math.round(s.correct/s.attempts*100)}%`:'未挑戦'}</span></div>`}).join('');$('statsBody').innerHTML=rows+`<button class="btn secondary" onclick="resetStats()" style="margin-top:12px">成績をリセット</button>`}
 function resetStats(){if(confirm('成績をすべてリセットしますか？')){stats={};saveStats();showStats();updateStats()}}
 updateStats();
-</script></body></html>
+</script>
+</body>
+</html>
