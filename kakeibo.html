@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ともやの家計簿</title>
+<style>
+body{font-family:system-ui,sans-serif;background:#f5f5f5;margin:0;padding:30px;color:#333}.app{max-width:700px;margin:auto;background:white;padding:25px;border-radius:16px;box-shadow:0 4px 18px #0001}h1{text-align:center}.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}.card{padding:15px;border-radius:12px;background:#f0f0f0;text-align:center}.income{color:#16803c}.expense{color:#c0392b}.balance{color:#2455a4}form{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;margin:20px 0}input,select,button{padding:10px;border:1px solid #ddd;border-radius:8px;font-size:15px}button{cursor:pointer;background:#333;color:white}.item{display:flex;justify-content:space-between;padding:12px 4px;border-bottom:1px solid #eee}.delete{background:#eee;color:#333;padding:5px 9px} @media(max-width:600px){.summary{grid-template-columns:1fr}.app{padding:18px}form{grid-template-columns:1fr 1fr}.add{grid-column:span 2}}
+</style>
+</head>
+<body>
+<div class="app">
+<h1>💰 ともやの家計簿</h1>
+<div class="summary"><div class="card income">収入<br><strong id="income">¥0</strong></div><div class="card expense">支出<br><strong id="expense">¥0</strong></div><div class="card balance">残り<br><strong id="balance">¥0</strong></div></div>
+<form id="form"><input id="amount" type="number" min="1" placeholder="金額" required><select id="category"><option>食費</option><option>家賃</option><option>光熱費</option><option>交通費</option><option>趣味</option><option>その他</option></select><select id="type"><option value="expense">支出</option><option value="income">収入</option></select><button class="add">追加</button></form>
+<h2>明細</h2><div id="list"></div>
+</div>
+<script>
+let records=JSON.parse(localStorage.getItem('kakeibo')||'[]');
+const yen=n=>'¥'+n.toLocaleString('ja-JP');
+function save(){localStorage.setItem('kakeibo',JSON.stringify(records));render()}
+function render(){let inc=records.filter(r=>r.type==='income').reduce((s,r)=>s+r.amount,0),exp=records.filter(r=>r.type==='expense').reduce((s,r)=>s+r.amount,0);document.getElementById('income').textContent=yen(inc);document.getElementById('expense').textContent=yen(exp);document.getElementById('balance').textContent=yen(inc-exp);document.getElementById('list').innerHTML=records.length?records.slice().reverse().map((r,i)=>`<div class="item"><span>${r.category}　${r.type==='income'?'＋':'−'}${yen(r.amount)}</span><button class="delete" onclick="remove(${records.length-1-i})">削除</button></div>`).join(''):'まだ記録がありません';}
+function remove(i){records.splice(i,1);save()}
+document.getElementById('form').addEventListener('submit',e=>{e.preventDefault();records.push({amount:Number(amount.value),category:category.value,type:type.value});e.target.reset();save()});render();
+</script>
+</body>
+</html>
