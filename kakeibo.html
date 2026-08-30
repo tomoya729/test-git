@@ -2,44 +2,498 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#333333">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#f7f7f7">
   <link rel="manifest" href="manifest.json">
   <title>💰 家計簿アプリ</title>
   <style>
-    *{box-sizing:border-box}body{font-family:system-ui,sans-serif;background:#f5f5f5;margin:0;padding:20px;color:#333}.app{max-width:850px;margin:auto;background:#fff;padding:24px;border-radius:18px;box-shadow:0 4px 18px #0001}h1{text-align:center}.toolbar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:16px 0}.toolbar input,.toolbar button,form input,form select,form button{padding:10px;border:1px solid #ddd;border-radius:8px;font-size:15px}button{cursor:pointer;background:#333;color:white}.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:20px 0}.card{padding:14px;border-radius:12px;background:#f0f0f0;text-align:center}.income{color:#16803c}.expense{color:#c0392b}.balance{color:#2455a4}.invest{color:#7950a8}form{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;margin:20px 0}.section{margin-top:28px}.chart-wrap{width:100%;max-width:520px;margin:auto;display:flex;justify-content:center;overflow:hidden}.chart-wrap canvas{display:block;width:100%;height:auto;max-height:520px}.item{display:grid;grid-template-columns:100px 1fr auto auto;gap:10px;align-items:center;padding:11px 4px;border-bottom:1px solid #eee}.item button{padding:6px 9px}.edit{background:#666}.delete{background:#eee;color:#333}.empty{text-align:center;color:#888;padding:20px}@media(max-width:650px){body{padding:8px}.app{padding:15px;border-radius:14px}.summary{grid-template-columns:1fr 1fr}form{grid-template-columns:1fr 1fr}.add{grid-column:span 2}.item{grid-template-columns:1fr auto}.chart-wrap{max-width:100%}}@media(max-width:420px){.summary{grid-template-columns:1fr}.app{padding:12px}}
+    /* ==================== 基本設定 ==================== */
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #f6f7f8;
+      color: #222;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+
+    /* ==================== アプリ全体 ==================== */
+    .app {
+      width: min(100%, 900px);
+      min-height: 100vh;
+      margin: auto;
+      padding: 18px 16px 40px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    .header h1 { margin: 0; font-size: 24px; }
+    .menu-button {
+      width: 42px;
+      height: 42px;
+      border: 0;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 2px 10px #0001;
+    }
+
+    /* ==================== 月選択 ==================== */
+    .month-selector {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .month-selector button {
+      width: 40px;
+      height: 40px;
+      border: 0;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 2px 8px #0001;
+    }
+    #month {
+      padding: 9px 12px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background: white;
+      font-weight: 600;
+    }
+
+    /* ==================== サマリー ==================== */
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .card {
+      padding: 15px 10px;
+      border-radius: 16px;
+      background: white;
+      box-shadow: 0 2px 10px #0000000d;
+    }
+    .card span { font-size: 12px; color: #777; }
+    .card strong { display: block; margin-top: 5px; font-size: 18px; }
+    .income strong { color: #16803c; }
+    .expense strong { color: #c0392b; }
+    .balance strong { color: #2455a4; }
+    .invest strong { color: #7950a8; }
+
+    /* ==================== 追加フォーム ==================== */
+    .add-panel {
+      margin-bottom: 24px;
+      padding: 18px;
+      border-radius: 18px;
+      background: white;
+      box-shadow: 0 2px 10px #0000000d;
+    }
+    .add-panel h2 { margin: 0 0 14px; font-size: 18px; }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .form-grid input,
+    .form-grid select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background: #fff;
+    }
+    .amount-input { grid-column: span 2; font-size: 22px; }
+    .add-button {
+      grid-column: span 2;
+      padding: 13px;
+      border: 0;
+      border-radius: 12px;
+      background: #222;
+      color: white;
+      font-weight: 700;
+    }
+
+    /* ==================== セクション ==================== */
+    .section {
+      margin-top: 24px;
+      padding: 18px;
+      border-radius: 18px;
+      background: white;
+      box-shadow: 0 2px 10px #0000000d;
+    }
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .section h2 { margin: 0; font-size: 18px; }
+
+    /* ==================== グラフ ==================== */
+    .chart-wrap {
+      width: 100%;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+    }
+    #chart { max-width: 100%; height: auto; }
+
+    /* ==================== 明細 ==================== */
+    .item {
+      display: grid;
+      grid-template-columns: 82px 1fr auto auto;
+      gap: 8px;
+      align-items: center;
+      padding: 13px 0;
+      border-bottom: 1px solid #eee;
+    }
+    .item:last-child { border-bottom: 0; }
+    .item small { color: #777; }
+    .item span { font-weight: 600; }
+    .item button {
+      padding: 7px 9px;
+      border: 0;
+      border-radius: 8px;
+    }
+    .edit { background: #eee; color: #333; }
+    .delete { background: #f5f5f5; color: #c0392b; }
+    .empty { padding: 24px 0; text-align: center; color: #888; }
+
+    /* ==================== その他ボタン ==================== */
+    .tools {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      margin-top: 12px;
+    }
+    .tools button {
+      padding: 9px 12px;
+      border: 0;
+      border-radius: 9px;
+      background: #eee;
+    }
+
+    /* ==================== スマホ表示 ==================== */
+    @media (max-width: 650px) {
+      .app { padding: 14px 10px 30px; }
+      .header h1 { font-size: 21px; }
+      .summary { grid-template-columns: 1fr 1fr; }
+      .card { padding: 13px 11px; }
+      .section, .add-panel { padding: 15px; border-radius: 16px; }
+      .item { grid-template-columns: 70px 1fr auto; }
+      .item .delete { grid-column: 3; }
+      .item .edit { grid-column: 3; grid-row: 1; }
+    }
+
+    @media (max-width: 420px) {
+      .summary { gap: 7px; }
+      .card strong { font-size: 16px; }
+      .month-selector { gap: 7px; }
+    }
   </style>
 </head>
 <body>
-  <div class="app">
-    <h1>💰 家計簿アプリ</h1>
-    <div class="toolbar"><label>対象月 <input id="month" type="month"></label><button onclick="exportCSV()">CSV出力</button><button onclick="clearAll()">全データ削除</button></div>
-    <div class="summary"><div class="card income">収入<br><strong id="income">¥0</strong></div><div class="card expense">支出<br><strong id="expense">¥0</strong></div><div class="card balance">残り<br><strong id="balance">¥0</strong></div><div class="card invest">投資<br><strong id="investment">¥0</strong></div></div>
-    <form id="form"><input id="date" type="date" required><input id="amount" type="number" min="1" placeholder="金額" required><select id="category"><option>食費</option><option>家賃</option><option>光熱費</option><option>交通費</option><option>趣味</option><option>日用品</option><option>投資</option><option>その他</option></select><select id="type"><option value="expense">支出</option><option value="income">収入</option></select><button class="add">追加</button></form>
-    <div class="section"><h2>📊 カテゴリ別支出</h2><div class="chart-wrap"><canvas id="chart"></canvas></div></div>
-    <div class="section"><h2>🧾 明細</h2><div id="list"></div></div>
-  </div>
+  <main class="app">
+    <!-- ==================== ヘッダー ==================== -->
+    <header class="header">
+      <h1>💰 家計簿</h1>
+      <button class="menu-button" onclick="showTools()">⋮</button>
+    </header>
+
+    <!-- ==================== 月選択 ==================== -->
+    <div class="month-selector">
+      <button onclick="changeMonth(-1)">‹</button>
+      <input id="month" type="month">
+      <button onclick="changeMonth(1)">›</button>
+    </div>
+
+    <!-- ==================== 今月の集計 ==================== -->
+    <section class="summary">
+      <div class="card income"><span>収入</span><strong id="income">¥0</strong></div>
+      <div class="card expense"><span>支出</span><strong id="expense">¥0</strong></div>
+      <div class="card balance"><span>残り</span><strong id="balance">¥0</strong></div>
+      <div class="card invest"><span>投資</span><strong id="investment">¥0</strong></div>
+    </section>
+
+    <!-- ==================== 入力 ==================== -->
+    <section class="add-panel">
+      <h2>＋ お金を記録</h2>
+      <form id="form" class="form-grid">
+        <input id="date" type="date" required>
+        <select id="type">
+          <option value="expense">支出</option>
+          <option value="income">収入</option>
+        </select>
+        <input id="amount" class="amount-input" type="number" min="1" placeholder="金額を入力" required>
+        <select id="category">
+          <option>食費</option>
+          <option>家賃</option>
+          <option>光熱費</option>
+          <option>交通費</option>
+          <option>趣味</option>
+          <option>日用品</option>
+          <option>投資</option>
+          <option>その他</option>
+        </select>
+        <button class="add-button">記録する</button>
+      </form>
+    </section>
+
+    <!-- ==================== グラフ ==================== -->
+    <section class="section">
+      <div class="section-title">
+        <h2>📊 支出の内訳</h2>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="chart"></canvas>
+      </div>
+    </section>
+
+    <!-- ==================== 明細 ==================== -->
+    <section class="section">
+      <div class="section-title">
+        <h2>🧾 明細</h2>
+      </div>
+      <div id="list"></div>
+      <div class="tools" id="tools" hidden>
+        <button onclick="exportCSV()">CSV出力</button>
+        <button onclick="clearAll()">全データ削除</button>
+      </div>
+    </section>
+  </main>
+
   <script>
-    let records=JSON.parse(localStorage.getItem('kakeibo')||'[]');let editingId=null;const yen=n=>'¥'+n.toLocaleString('ja-JP');const today=new Date();const iso=d=>d.toISOString().slice(0,10);date.value=iso(today);month.value=iso(today).slice(0,7);
-    function selected(){return records.filter(r=>r.date.startsWith(month.value))}
-    function save(){localStorage.setItem('kakeibo',JSON.stringify(records));render()}
-    function render(){const rs=selected();const inc=rs.filter(r=>r.type==='income').reduce((s,r)=>s+r.amount,0);const exp=rs.filter(r=>r.type==='expense').reduce((s,r)=>s+r.amount,0);const inv=rs.filter(r=>r.category==='投資').reduce((s,r)=>s+r.amount,0);income.textContent=yen(inc);expense.textContent=yen(exp);balance.textContent=yen(inc-exp);investment.textContent=yen(inv);list.innerHTML=rs.length?rs.slice().reverse().map(r=>`<div class="item"><small>${r.date}</small><span>${r.category}　${r.type==='income'?'＋':'−'}${yen(r.amount)}</span><button class="edit" onclick="editRecord(${r.id})">編集</button><button class="delete" onclick="removeRecord(${r.id})">削除</button></div>`).join(''):'<div class="empty">この月の記録はありません</div>';drawChart(rs.filter(r=>r.type==='expense'))}
-    function drawChart(rs){const c=document.getElementById('chart'),ctx=c.getContext('2d'),w=Math.min(c.parentElement.clientWidth,520),h=360,dpr=devicePixelRatio||1;c.width=w*dpr;c.height=h*dpr;c.style.width=w+'px';c.style.height=h+'px';ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);const sums={};rs.forEach(r=>sums[r.category]=(sums[r.category]||0)+r.amount);const entries=Object.entries(sums);if(!entries.length){ctx.fillStyle='#888';ctx.font='18px sans-serif';ctx.textAlign='center';ctx.fillText('データなし',w/2,h/2);return}const total=entries.reduce((s,[,v])=>s+v,0),cx=w/2,cy=145,r=Math.min(105,w*.25);let start=-Math.PI/2;entries.forEach(([k,v],i)=>{const a=v/total*Math.PI*2;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,start,start+a);ctx.closePath();ctx.fillStyle=`hsl(${i*55},65%,55%)`;ctx.fill();start+=a});ctx.fillStyle='#333';ctx.font='bold 18px sans-serif';ctx.textAlign='center';ctx.fillText(yen(total),cx,cy+7);ctx.textAlign='left';ctx.font='14px sans-serif';entries.forEach(([k,v],i)=>{ctx.fillStyle='#333';ctx.fillText(`${k}: ${yen(v)}`,20,285+i*22)})}
-    form.addEventListener('submit',e=>{e.preventDefault();const data={date:date.value,amount:Number(amount.value),category:category.value,type:type.value};if(editingId){Object.assign(records.find(r=>r.id===editingId),data);editingId=null;document.querySelector('.add').textContent='追加'}else records.push({id:Date.now(),...data});e.target.reset();date.value=iso(today);save()});
-    function editRecord(id){const r=records.find(x=>x.id===id);date.value=r.date;amount.value=r.amount;category.value=r.category;type.value=r.type;editingId=id;document.querySelector('.add').textContent='更新';window.scrollTo({top:0,behavior:'smooth'})}
-    function removeRecord(id){records=records.filter(r=>r.id!==id);save()}
-    function exportCSV(){const rs=selected();const csv='日付,金額,カテゴリ,種別\n'+rs.map(r=>`${r.date},${r.amount},${r.category},${r.type==='income'?'収入':'支出'}`).join('\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`kakeibo-${month.value}.csv`;a.click();URL.revokeObjectURL(a.href)}
-    function clearAll(){if(confirm('全データを削除しますか？')){records=[];save()}}
-    month.addEventListener('change',render);window.addEventListener('resize',render);render();
+    // ==================== データ ====================
+    let records = JSON.parse(localStorage.getItem('kakeibo') || '[]');
+    let editingId = null;
+
+    const displayYen = (number) => '¥' + number.toLocaleString('ja-JP');
+    const today = new Date();
+    const toDateString = (date) => date.toISOString().slice(0, 10);
+
+    date.value = toDateString(today);
+    month.value = toDateString(today).slice(0, 7);
+
+    // ==================== 月のデータを取得 ====================
+    function selectedRecords() {
+      return records.filter((record) => record.date.startsWith(month.value));
+    }
+
+    // ==================== データを保存 ====================
+    function saveRecords() {
+      localStorage.setItem('kakeibo', JSON.stringify(records));
+      render();
+    }
+
+    // ==================== 画面を更新 ====================
+    function render() {
+      const recordsOfMonth = selectedRecords();
+
+      const incomeTotal = recordsOfMonth
+        .filter((record) => record.type === 'income')
+        .reduce((sum, record) => sum + record.amount, 0);
+
+      const expenseTotal = recordsOfMonth
+        .filter((record) => record.type === 'expense')
+        .reduce((sum, record) => sum + record.amount, 0);
+
+      const investmentTotal = recordsOfMonth
+        .filter((record) => record.category === '投資')
+        .reduce((sum, record) => sum + record.amount, 0);
+
+      income.textContent = displayYen(incomeTotal);
+      expense.textContent = displayYen(expenseTotal);
+      balance.textContent = displayYen(incomeTotal - expenseTotal);
+      investment.textContent = displayYen(investmentTotal);
+
+      renderList(recordsOfMonth);
+      drawChart(recordsOfMonth.filter((record) => record.type === 'expense'));
+    }
+
+    // ==================== 明細を表示 ====================
+    function renderList(recordsOfMonth) {
+      if (recordsOfMonth.length === 0) {
+        list.innerHTML = '<div class="empty">この月の記録はありません</div>';
+        return;
+      }
+
+      list.innerHTML = recordsOfMonth
+        .slice()
+        .reverse()
+        .map((record) => `
+          <div class="item">
+            <small>${record.date}</small>
+            <span>${record.category}　${record.type === 'income' ? '＋' : '−'}${displayYen(record.amount)}</span>
+            <button class="edit" onclick="editRecord(${record.id})">編集</button>
+            <button class="delete" onclick="removeRecord(${record.id})">削除</button>
+          </div>
+        `)
+        .join('');
+    }
+
+    // ==================== グラフを描画 ====================
+    function drawChart(recordsOfMonth) {
+      const canvas = document.getElementById('chart');
+      const context = canvas.getContext('2d');
+      const width = Math.min(canvas.parentElement.clientWidth, 520);
+      const height = 360;
+      const devicePixelRatioValue = window.devicePixelRatio || 1;
+
+      canvas.width = width * devicePixelRatioValue;
+      canvas.height = height * devicePixelRatioValue;
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+      context.setTransform(devicePixelRatioValue, 0, 0, devicePixelRatioValue, 0, 0);
+      context.clearRect(0, 0, width, height);
+
+      const totalsByCategory = {};
+      recordsOfMonth.forEach((record) => {
+        totalsByCategory[record.category] = (totalsByCategory[record.category] || 0) + record.amount;
+      });
+
+      const entries = Object.entries(totalsByCategory);
+
+      if (entries.length === 0) {
+        context.fillStyle = '#888';
+        context.font = '18px sans-serif';
+        context.textAlign = 'center';
+        context.fillText('まだ支出がありません', width / 2, height / 2);
+        return;
+      }
+
+      const total = entries.reduce((sum, [, value]) => sum + value, 0);
+      const centerX = width / 2;
+      const centerY = 145;
+      const radius = Math.min(105, width * 0.25);
+      let startAngle = -Math.PI / 2;
+
+      entries.forEach(([category, value], index) => {
+        const angle = (value / total) * Math.PI * 2;
+
+        context.beginPath();
+        context.moveTo(centerX, centerY);
+        context.arc(centerX, centerY, radius, startAngle, startAngle + angle);
+        context.closePath();
+        context.fillStyle = `hsl(${index * 55}, 65%, 55%)`;
+        context.fill();
+
+        startAngle += angle;
+      });
+
+      context.fillStyle = '#333';
+      context.font = 'bold 18px sans-serif';
+      context.textAlign = 'center';
+      context.fillText(displayYen(total), centerX, centerY + 7);
+
+      context.textAlign = 'left';
+      context.font = '14px sans-serif';
+      entries.forEach(([category, value], index) => {
+        context.fillStyle = '#333';
+        context.fillText(`${category}: ${displayYen(value)}`, 20, 285 + index * 22);
+      });
+    }
+
+    // ==================== 記録を追加・更新 ====================
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const data = {
+        date: date.value,
+        amount: Number(amount.value),
+        category: category.value,
+        type: type.value
+      };
+
+      if (editingId) {
+        const record = records.find((item) => item.id === editingId);
+        Object.assign(record, data);
+        editingId = null;
+        document.querySelector('.add-button').textContent = '記録する';
+      } else {
+        records.push({ id: Date.now(), ...data });
+      }
+
+      event.target.reset();
+      date.value = toDateString(today);
+      saveRecords();
+    });
+
+    // ==================== 編集 ====================
+    function editRecord(id) {
+      const record = records.find((item) => item.id === id);
+
+      date.value = record.date;
+      amount.value = record.amount;
+      category.value = record.category;
+      type.value = record.type;
+      editingId = id;
+      document.querySelector('.add-button').textContent = '更新する';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ==================== 削除 ====================
+    function removeRecord(id) {
+      records = records.filter((record) => record.id !== id);
+      saveRecords();
+    }
+
+    // ==================== 月を変更 ====================
+    function changeMonth(amount) {
+      const currentMonth = new Date(`${month.value}-01`);
+      currentMonth.setMonth(currentMonth.getMonth() + amount);
+      month.value = currentMonth.toISOString().slice(0, 7);
+      render();
+    }
+
+    month.addEventListener('change', render);
+    window.addEventListener('resize', render);
+
+    // ==================== メニュー ====================
+    function showTools() {
+      tools.hidden = !tools.hidden;
+    }
+
+    // ==================== CSV出力 ====================
+    function exportCSV() {
+      const recordsOfMonth = selectedRecords();
+      const csv = '日付,金額,カテゴリ,種別\n' +
+        recordsOfMonth
+          .map((record) => `${record.date},${record.amount},${record.category},${record.type === 'income' ? '収入' : '支出'}`)
+          .join('\n');
+
+      const blob = new Blob(['\ufeff' + csv], { type: 'text/csv' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `kakeibo-${month.value}.csv`;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    }
+
+    // ==================== 全データ削除 ====================
+    function clearAll() {
+      if (confirm('全データを削除しますか？')) {
+        records = [];
+        saveRecords();
+      }
+    }
 
     // ==================== オフライン対応 ====================
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
           .then(() => console.log('オフライン対応を有効にしました'))
-          .catch(error => console.error('Service Workerの登録に失敗:', error));
+          .catch((error) => console.error('Service Workerの登録に失敗:', error));
       });
     }
+
+    // ==================== 初期表示 ====================
+    render();
   </script>
 </body>
 </html>
