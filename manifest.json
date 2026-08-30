@@ -1,0 +1,9 @@
+{
+  "name": "ともやの家計簿",
+  "short_name": "家計簿",
+  "start_url": "kakeibo.html",
+  "display": "standalone",
+  "background_color": "#f5f5f5",
+  "theme_color": "#333333",
+  "description": "ともや専用の家計簿アプリ"
+}
