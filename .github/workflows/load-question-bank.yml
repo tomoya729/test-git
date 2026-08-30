@@ -1,0 +1,33 @@
+name: Load question bank
+on:
+  push:
+    paths:
+      - 'questions.js'
+      - '.github/workflows/load-question-bank.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Merge question bank into app
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('hoken.html')
+          s=p.read_text(encoding='utf-8')
+          marker='<script>\nconst questions=['
+          replacement='<script src="questions.js"></script><script>\nconst questions=[...window.questionExtras,'
+          if marker not in s:
+              raise SystemExit('marker not found')
+          s=s.replace(marker,replacement,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add hoken.html
+          git diff --cached --quiet || git commit -m 'Load expanded question bank'
+          git push
