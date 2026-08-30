@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - 'questions.js'
+      - 'questions2.js'
       - '.github/workflows/load-question-bank.yml'
 permissions:
   contents: write
@@ -11,23 +12,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Merge question bank into app
+      - name: Merge question banks into app
         run: |
           python - <<'PY'
           from pathlib import Path
           p=Path('hoken.html')
           s=p.read_text(encoding='utf-8')
-          marker='<script>\nconst questions=['
-          replacement='<script src="questions.js"></script><script>\nconst questions=[...window.questionExtras,'
-          if marker not in s:
-              raise SystemExit('marker not found')
-          s=s.replace(marker,replacement,1)
+          old='<script src="questions.js"></script><script>\nconst questions=[...window.questionExtras,'
+          new='<script src="questions.js"></script><script src="questions2.js"></script><script>\nconst questions=[...window.questionExtras,...window.questionExtras2,'
+          if old in s:
+              s=s.replace(old,new,1)
+          else:
+              marker='<script>\nconst questions=['
+              replacement='<script src="questions.js"></script><script src="questions2.js"></script><script>\nconst questions=[...window.questionExtras,...window.questionExtras2,'
+              if marker not in s:
+                  raise SystemExit('question marker not found')
+              s=s.replace(marker,replacement,1)
           p.write_text(s,encoding='utf-8')
           PY
       - name: Commit
         run: |
           git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git config user.email '41898282+github-actions[bot].users.noreply.github.com'
           git add hoken.html
-          git diff --cached --quiet || git commit -m 'Load expanded question bank'
+          git diff --cached --quiet || git commit -m 'Load multiple question banks'
           git push
