@@ -15,3 +15,29 @@ add4('変額保険販売資格','運用損益','100万円が30%下落。その�
 add4('変額保険販売資格','リスク','変額保険の説明として不適切なのは？',['運用実績で積立金等が変動する','将来の運用成果を保証する','特別勘定の運用実績が反映される場合がある','価格変動で受取額が変わる可能性がある'],1,'将来の運用成果を保証する説明は不適切。','「必ず増える」「元本保証」などの断定に注意。');
 add4('変額保険販売資格','複利','100万円を年10%で2年間運用した場合の評価額は？',['110万円','120万円','121万円','122万円'],2,'100×1.10×1.10＝121万円。','10%×2年＝20%と単純計算しない。');
 add4('変額保険販売資格','税務','生命保険金の課税関係を判断するとき、特に確認すべき組合せは？',['契約者・被保険者・受取人','募集人・営業所・所在地','被保険者の年齢だけ','保険証券の色'],0,'契約者・被保険者・受取人の関係などが課税関係に影響する。','3者の関係を整理する。');
+
+// 重複整理：第2弾・第3弾にある「確認問題○-○」の焼き直しを、
+// 問題番号部分を無視して同一問題として扱う。最初に登場した問題を残す。
+(function dedupeQuestionBank(){
+  const banks=['questionExtras','questionExtras2','questionExtras3','questionExtras4'];
+  const seen=new Set();
+  let before=0,removed=0;
+  const normalize=q=>String(q||'')
+    .replace(/\s*（確認問題\s*\d+\s*-\s*\d+）\s*$/,'')
+    .replace(/\s*\(確認問題\s*\d+\s*-\s*\d+\)\s*$/i,'')
+    .replace(/\s+/g,'')
+    .replace(/[。、，,！!？?：:「」『』]/g,'');
+  for(const name of banks){
+    const bank=window[name];
+    if(!Array.isArray(bank)) continue;
+    before+=bank.length;
+    const kept=[];
+    for(const q of bank){
+      const key=`${q.exam}|${q.cat}|${normalize(q.q)}|${JSON.stringify(q.c)}|${q.a}`;
+      if(seen.has(key)){removed++;continue;}
+      seen.add(key);kept.push(q);
+    }
+    window[name]=kept;
+  }
+  window.questionDedupStats={before,removed,after:before-removed};
+})();
