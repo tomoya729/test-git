@@ -9,9 +9,7 @@
        画面の見た目（CSS）
        ================================ -->
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       font-family: sans-serif;
@@ -59,22 +57,10 @@
       background: #eee;
     }
 
-    button:hover {
-      filter: brightness(0.95);
-    }
-
-    .operator {
-      background: #ddd;
-    }
-
-    .equals {
-      background: #333;
-      color: white;
-    }
-
-    .zero {
-      grid-column: span 2;
-    }
+    button:hover { filter: brightness(0.95); }
+    .operator { background: #ddd; }
+    .equals { background: #333; color: white; }
+    .zero { grid-column: span 2; }
   </style>
 </head>
 
@@ -110,6 +96,7 @@
       <!-- 5段目 -->
       <button class="zero" onclick="append('0')">0</button>
       <button onclick="append('.')">.</button>
+      <button onclick="percent()">%</button>
     </div>
   </div>
 
@@ -143,6 +130,16 @@
       } else {
         display.value = '0';
       }
+    }
+
+    // 「%」を押したとき、最後の数字を100分の1にする
+    function percent() {
+      const match = display.value.match(/(\d+(?:\.\d+)?)$/);
+
+      if (!match) return;
+
+      const number = Number(match[1]) / 100;
+      display.value = display.value.slice(0, -match[1].length) + number;
     }
 
     // 「=」を押したときに計算する
