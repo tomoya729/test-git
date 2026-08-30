@@ -35,6 +35,7 @@
       <button onclick="calculate()">=</button>
       <button class="zero" onclick="append('0')">0</button>
       <button onclick="append('.')">.</button>
+      <button onclick="percent()">%</button>
     </div>
   </div>
   <script>
@@ -45,6 +46,12 @@
     }
     function clearDisplay() { display.value = '0'; }
     function backspace() { display.value = display.value.length > 1 ? display.value.slice(0, -1) : '0'; }
+    function percent() {
+      const match = display.value.match(/(\d+(?:\.\d+)?)$/);
+      if (!match) return;
+      const number = Number(match[1]) / 100;
+      display.value = display.value.slice(0, -match[1].length) + number;
+    }
     function calculate() {
       try {
         if (!/^[0-9+\-*/. ]+$/.test(display.value)) throw new Error();
