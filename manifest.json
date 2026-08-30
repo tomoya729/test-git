@@ -5,5 +5,13 @@
   "display": "standalone",
   "background_color": "#f5f5f5",
   "theme_color": "#333333",
-  "description": "シンプルで使いやすい家計簿アプリ"
+  "description": "シンプルで使いやすい家計簿アプリ",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
 }
