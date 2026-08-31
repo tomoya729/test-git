@@ -1,0 +1,35 @@
+name: Harden Oni Mode
+on:
+  push:
+    paths:
+      - 'questions*.js'
+      - '.github/workflows/harden-oni.yml'
+permissions:
+  contents: write
+jobs:
+  harden:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch oni mode
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('hoken.html')
+          s=p.read_text(encoding='utf-8')
+          old="if(mode==='oni')pool=pool.filter(x=>(x.difficulty||x.d||0)>=5&&x.id!==5018);"
+          new="if(mode==='oni')pool=pool.filter(x=>x.oni===true||(x.difficulty||x.d||0)>=6||((x.difficulty||x.d||0)>=5&&((x.calc===true)||(String(x.q||'').length>=70))));"
+          if old not in s:
+              print('oni selector already patched or target not found')
+              raise SystemExit(0)
+          s=s.replace(old,new,1)
+          s=s.replace('難易度5以上の問題だけを出題。20問・15分。','鬼専用問題・難易度6以上・複合論点問題を中心に出題。20問・15分。',1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add hoken.html
+          git diff --cached --quiet || git commit -m 'fix: make oni mode genuinely harder'
+          git push
