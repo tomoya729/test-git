@@ -2,8 +2,7 @@ name: Load question bank
 on:
   push:
     paths:
-      - 'questions.js'
-      - 'questions2.js'
+      - 'questions*.js'
       - '.github/workflows/load-question-bank.yml'
 permissions:
   contents: write
@@ -12,28 +11,50 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Merge question banks into app
+      - name: Merge all question banks into app
         run: |
           python - <<'PY'
           from pathlib import Path
-          p=Path('hoken.html')
-          s=p.read_text(encoding='utf-8')
-          old='<script src="questions.js"></script><script>\nconst questions=[...window.questionExtras,'
-          new='<script src="questions.js"></script><script src="questions2.js"></script><script>\nconst questions=[...window.questionExtras,...window.questionExtras2,'
-          if old in s:
-              s=s.replace(old,new,1)
-          else:
-              marker='<script>\nconst questions=['
-              replacement='<script src="questions.js"></script><script src="questions2.js"></script><script>\nconst questions=[...window.questionExtras,...window.questionExtras2,'
+          import re
+
+          app = Path('hoken.html')
+          s = app.read_text(encoding='utf-8')
+
+          files = [p for p in Path('.').glob('questions*.js') if re.fullmatch(r'questions\d*\.js', p.name)]
+          files.sort(key=lambda p: 1 if p.name == 'questions.js' else int(re.search(r'\d+', p.name).group()))
+
+          tags = ''.join(f'<script src="{p.name}"></script>' for p in files)
+
+          # Replace the existing question-bank script tags wherever they are together.
+          pattern = r'(?:<script src="questions\d*\.js"></script>)+'
+          s, n = re.subn(pattern, tags, s, count=1)
+
+          if n == 0:
+              marker = '<script>\nconst questions='
               if marker not in s:
                   raise SystemExit('question marker not found')
-              s=s.replace(marker,replacement,1)
-          p.write_text(s,encoding='utf-8')
+              s = s.replace(marker, tags + '<script>\nconst questions=', 1)
+
+          # Make the question array include every questions*.js bank currently in the repo.
+          refs = []
+          for p in files:
+              if p.name == 'questions.js':
+                  refs.append('...(window.questionExtras||[])')
+              else:
+                  num = re.search(r'\d+', p.name).group()
+                  refs.append(f'...(window.questionExtras{num}||[])')
+          question_array = 'const questions=[' + ','.join(refs) + '];'
+          s, n2 = re.subn(r'const questions=\[[^\n]*\];', question_array, s, count=1)
+          if n2 == 0:
+              raise SystemExit('questions array not found')
+
+          app.write_text(s, encoding='utf-8')
+          print('Loaded:', ', '.join(p.name for p in files))
           PY
       - name: Commit
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot].users.noreply.github.com'
           git add hoken.html
-          git diff --cached --quiet || git commit -m 'Load multiple question banks'
+          git diff --cached --quiet || git commit -m 'Auto-load all question banks'
           git push
